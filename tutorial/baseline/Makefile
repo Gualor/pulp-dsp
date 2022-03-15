@@ -3,6 +3,6 @@ PULP_APP_FC_SRCS = main.c
 
 PULP_LDFLAGS += -lplpdsp -lm
 
-PULP_CFLAGS += -O3 -g
+PULP_CFLAGS += -O3 -g -DRTOS_PMSIS
 
--include $(PULP_SDK_HOME)/install/rules/pulp.mk
+-include $(RULES_DIR)/pmsis_rules.mk

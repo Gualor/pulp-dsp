@@ -1,9 +1,9 @@
 /* =====================================================================
  * Project:      PULP DSP Library
- * Title:        plp_dot_prod_i32p_xpulpv2.c
- * Description:  32-bit integer scalar dot product for XPULPV2 with interleaved access
+ * Title:        plp_dot_prod_q16p_xpulpv2.c
+ * Description:  16-bit fixed point scalar dot product for XPULPV2 with interleaved access
  *
- * $Date:        03. Jun 2019
+ * $Date:        04. Jun 2019
  * $Revision:    V0
  *
  * Target Processor: PULP cores
@@ -45,20 +45,23 @@
  */
 
 /**
-  @brief Parallel dot product with interleaved access of 32-bit integer vectors kernel for XPULPV2
-  extension.
-  @param[in]  S     points to the instance structure for integer parallel dot product
+  @brief Parallel dot product with interleaved access of 16-bit fixed point vectors kernel for
+  XPULPV2 extension.
+  @param[in]  S     points to the instance structure for fixed point parallel dot product
   @return        none
  */
 
-void plp_dot_prod_i32p_xpulpv2(void *S) {
+void plp_dot_prod_q16p_xpulpv2(void *S) {
 
-    int32_t *pSrcA = (int32_t *)(((plp_dot_prod_instance_i32 *)S)->pSrcA);
-    int32_t *pSrcB = (int32_t *)(((plp_dot_prod_instance_i32 *)S)->pSrcB);
-    uint32_t blkSizePE = ((plp_dot_prod_instance_i32 *)S)->blkSizePE;
-    uint32_t nPE = ((plp_dot_prod_instance_i32 *)S)->nPE;
     int core_id = hal_core_id();
-    int32_t *resBufferPE = &(((plp_dot_prod_instance_i32 *)S)->resBuffer[core_id]);
+    plp_dot_prod_instance_q16 *args = (plp_dot_prod_instance_q16 *)S;
+
+    int16_t *pSrcA = (int16_t *)(args->pSrcA);
+    int16_t *pSrcB = (int16_t *)(args->pSrcB);
+    uint32_t blkSizePE = args->blkSizePE;
+    uint32_t deciPoint = args->deciPoint;
+    uint32_t nPE = args->nPE;
+    int32_t *resBufferPE = &(args->resBuffer[core_id]);
 
     uint32_t blkCnt;    /* Loop counter, temporal BlockSize */
     int32_t sum = 0;    /* Temporary return variable */
@@ -66,19 +69,21 @@ void plp_dot_prod_i32p_xpulpv2(void *S) {
 
 #if defined(PLP_MATH_LOOPUNROLL)
 
-    uint32_t loopCycles = (blkSizePE >> 1) << 1;
+    int32_t x0, x1 = 0;
+    uint32_t loopCycles = (blkSizePE / nPE) & 0xFFFFFFFE;
     for (blkCnt = blkSizePE * core_id; blkCnt < blkSizePE * core_id + loopCycles; blkCnt += 2) {
-        sum = __MAC(sum, pSrcA[blkCnt],   pSrcB[blkCnt]);
-        sum = __MAC(sum, pSrcA[blkCnt+1], pSrcB[blkCnt+1]);
+        x0 = pSrcA[blkCnt] * pSrcB[blkCnt]);
+        x1 = pSrcA[blkCnt + 1] * pSrcB[blkCnt + 1]);
+        sum += __ADDROUNDNORM_REG(x0, x1, deciPoint);
     }
     if (blkSizePE & 1U) {
-        sum = __MAC(sum, pSrcA[blkCnt], pSrcB[blkCnt]);
+        sum += __ROUNDNORM_REG(pSrcA[blkCnt] * pSrcB[blkCnt], deciPoint);
     }
 
 #else // PLP_MATH_LOOPUNROLL
 
     for (blkCnt = blkSizePE * core_id; blkCnt < blkSizePE * core_id + blkSizePE; blkCnt++) {
-        sum = __MAC(sum, pSrcA[blkCnt], pSrcB[blkCnt]);
+        sum += __ROUNDNORM_REG(pSrcA[blkCnt] * pSrcB[blkCnt], deciPoint);
     }
     
 #endif // PLP_MATH_LOOPUNROLL

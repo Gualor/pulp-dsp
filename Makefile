@@ -35,9 +35,12 @@ FC_SRCS = \
 	src/StatisticsFunctions/plp_std_q32.c src/StatisticsFunctions/kernels/plp_std_q32s_rv32im.c \
 	src/StatisticsFunctions/plp_std_q16.c src/StatisticsFunctions/kernels/plp_std_q16s_rv32im.c \
 	src/StatisticsFunctions/plp_std_q8.c src/StatisticsFunctions/kernels/plp_std_q8s_rv32im.c \
-  src/BasicMathFunctions/dot_prod/plp_dot_prod_f32_parallel.c \
+  	src/BasicMathFunctions/dot_prod/plp_dot_prod_f32_parallel.c \
 	src/BasicMathFunctions/dot_prod/plp_dot_prod_q32_parallel.c \
 	src/BasicMathFunctions/dot_prod/plp_dot_prod_i32_parallel.c \
+	src/BasicMathFunctions/dot_prod/plp_dot_prod_i16_parallel.c \
+	src/BasicMathFunctions/dot_prod/plp_dot_prod_q16_parallel.c \
+	src/BasicMathFunctions/dot_prod/plp_dot_prod_f16_parallel.c \
 	src/StatisticsFunctions/plp_rms_f32.c \
 	src/StatisticsFunctions/plp_rms_q32.c src/StatisticsFunctions/kernels/plp_rms_q32s_rv32im.c \
 	src/StatisticsFunctions/plp_rms_q16.c src/StatisticsFunctions/kernels/plp_rms_q16s_rv32im.c \
@@ -445,10 +448,13 @@ CL_SRCS = \
 	src/FastMathFunctions/kernels/plp_cos_f32s_xpulpv2.c \
 	src/FastMathFunctions/kernels/plp_cos_q16s_xpulpv2.c \
 	src/FastMathFunctions/kernels/plp_cos_q32s_xpulpv2.c \
-  src/BasicMathFunctions/dot_prod/kernels/plp_dot_prod_f32s_xpulpv2.c \
-  src/BasicMathFunctions/dot_prod/kernels/plp_dot_prod_f32p_xpulpv2.c \
+	src/BasicMathFunctions/dot_prod/kernels/plp_dot_prod_f32s_xpulpv2.c \
+	src/BasicMathFunctions/dot_prod/kernels/plp_dot_prod_f32p_xpulpv2.c \
 	src/BasicMathFunctions/dot_prod/kernels/plp_dot_prod_q32p_xpulpv2.c \
 	src/BasicMathFunctions/dot_prod/kernels/plp_dot_prod_i32p_xpulpv2.c \
+	src/BasicMathFunctions/dot_prod/kernels/plp_dot_prod_i16p_xpulpv2.c \
+	src/BasicMathFunctions/dot_prod/kernels/plp_dot_prod_q16p_xpulpv2.c \
+	src/BasicMathFunctions/dot_prod/kernels/plp_dot_prod_f16p_xpulpv2.c \
 	src/BasicMathFunctions/abs/kernels/plp_abs_i32s_xpulpv2.c \
 	src/BasicMathFunctions/abs/kernels/plp_abs_i16s_xpulpv2.c \
 	src/BasicMathFunctions/abs/kernels/plp_abs_i8s_xpulpv2.c \
@@ -461,8 +467,8 @@ CL_SRCS = \
 	src/BasicMathFunctions/mult/kernels/plp_mult_f32s_xpulpv2.c \
 	src/BasicMathFunctions/mult/kernels/plp_mult_f32p_xpulpv2.c \
 	src/BasicMathFunctions/log/kernels/plp_log_f32p_xpulpv2.c \
-  src/BasicMathFunctions/negate/kernels/plp_negate_f32s_xpulpv2.c \
-  src/BasicMathFunctions/negate/kernels/plp_negate_i32s_xpulpv2.c \
+	src/BasicMathFunctions/negate/kernels/plp_negate_f32s_xpulpv2.c \
+	src/BasicMathFunctions/negate/kernels/plp_negate_i32s_xpulpv2.c \
 	src/BasicMathFunctions/negate/kernels/plp_negate_i16s_xpulpv2.c \
 	src/BasicMathFunctions/negate/kernels/plp_negate_i8s_xpulpv2.c \
   src/BasicMathFunctions/offset/kernels/plp_offset_f32s_xpulpv2.c \

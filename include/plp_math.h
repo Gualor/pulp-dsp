@@ -111,10 +111,11 @@
 #include "rtos_hal.h"
 
 typedef float float32_t;
+typedef float float16_t;
 
-#define PLP_MATH_IBEX // previously called zero-riscy
-//#define PLP_MATH_RISCY
-#define PLP_MATH_LOOPUNROLL
+//#define PLP_MATH_IBEX // previously called zero-riscy
+#define PLP_MATH_RISCY
+//#define PLP_MATH_LOOPUNROLL
 
 /** -------------------------------------------------------
     @struct plp_dot_prod_instance_i32
@@ -126,14 +127,15 @@ typedef float float32_t;
     @param[out] resBuffer  pointer to the result buffer
 */
 typedef struct {
-    int32_t *pSrcA;     // pointer to the first vector
-    int32_t *pSrcB;     // pointer to the second vector
-    uint32_t blkSizePE; // number of samples in each vector
-    uint32_t nPE;       // number of processing units
-    int32_t *resBuffer; // pointer to result vector
+    const int32_t *pSrcA; // pointer to the first vector
+    const int32_t *pSrcB; // pointer to the second vector
+    uint32_t blkSizePE;   // number of samples in each vector
+    uint32_t nPE;         // number of processing units
+    int32_t *resBuffer;   // pointer to result vector
 } plp_dot_prod_instance_i32;
 
 /** -------------------------------------------------------
+    @struct plp_dot_prod_instance_q32
     @brief Instance structure for fixed point parallel dot product.
     @param[in]  pSrcA      points to the first input vector
     @param[in]  pSrcB      points to the second input vector
@@ -142,12 +144,12 @@ typedef struct {
     @param[out] resBuffer  pointer to the result buffer
 */
 typedef struct {
-    int32_t *pSrcA;     // pointer to the first vector
-    int32_t *pSrcB;     // pointer to the second vector
-    uint32_t blkSizePE; // number of samples in each vector
-    uint32_t deciPoint; // decimal point for right shift
-    uint32_t nPE;       // number of processing units
-    int32_t *resBuffer; // pointer to result vector
+    const int32_t *pSrcA; // pointer to the first vector
+    const int32_t *pSrcB; // pointer to the second vector
+    uint32_t blkSizePE;   // number of samples in each vector
+    uint32_t deciPoint;   // decimal point for right shift
+    uint32_t nPE;         // number of processing units
+    int32_t *resBuffer;   // pointer to result vector
 } plp_dot_prod_instance_q32;
 
 /** -------------------------------------------------------
@@ -166,6 +168,58 @@ typedef struct {
     uint32_t nPE;           // number of processing units
     float32_t *resBuffer;   // pointer to result vector
 } plp_dot_prod_instance_f32;
+
+/** -------------------------------------------------------
+    @struct plp_dot_prod_instance_i16
+    @brief Instance structure for integer parallel dot product.
+    @param[in]  pSrcA      points to the first input vector
+    @param[in]  pSrcB      points to the second input vector
+    @param[in]  blkSizePE  number of samples in each vector
+    @param[in]  nPE        number of parallel processing units
+    @param[out] resBuffer  pointer to the result buffer
+*/
+typedef struct {
+    const int16_t *pSrcA; // pointer to the first vector
+    const int16_t *pSrcB; // pointer to the second vector
+    uint32_t blkSizePE;   // number of samples in each vector
+    uint32_t nPE;         // number of processing units
+    int32_t *resBuffer;   // pointer to result vector
+} plp_dot_prod_instance_i16;
+
+/** -------------------------------------------------------
+    @struct plp_dot_prod_instance_q16
+    @brief Instance structure for fixed point parallel dot product.
+    @param[in]  pSrcA      points to the first input vector
+    @param[in]  pSrcB      points to the second input vector
+    @param[in]  blkSizePE  number of samples in each vector
+    @param[in]  nPE        number of parallel processing units
+    @param[out] resBuffer  pointer to the result buffer
+*/
+typedef struct {
+    const int16_t *pSrcA; // pointer to the first vector
+    const int16_t *pSrcB; // pointer to the second vector
+    uint32_t blkSizePE;   // number of samples in each vector
+    uint32_t deciPoint;   // decimal point for right shift
+    uint32_t nPE;         // number of processing units
+    int32_t *resBuffer;   // pointer to result vector
+} plp_dot_prod_instance_q16;
+
+/** -------------------------------------------------------
+    @struct plp_dot_prod_instance_f16
+    @brief Instance structure for float parallel dot product.
+    @param[in]  pSrcA      points to the first input vector
+    @param[in]  pSrcB      points to the second input vector
+    @param[in]  blkSizePE  number of samples in each vector
+    @param[in]  nPE        number of parallel processing units
+    @param[out] resBuffer  pointer to the result buffer
+*/
+typedef struct {
+    const float16_t *pSrcA; // pointer to the first vector
+    const float16_t *pSrcB; // pointer to the second vector
+    uint32_t blkSizePE;     // number of samples in each vector
+    uint32_t nPE;           // number of processing units
+    float32_t *resBuffer;   // pointer to result vector
+} plp_dot_prod_instance_f16;
 
 /** -------------------------------------------------------
     @struct plp_mult_instance_f32
@@ -1829,10 +1883,86 @@ void plp_dot_prod_f32s_xpulpv2(const float32_t *__restrict__ pSrcA,
 */
 
 void plp_dot_prod_f32s_rv32im(const float32_t *__restrict__ pSrcA,
-                               const float32_t *__restrict__ pSrcB,
+                              const float32_t *__restrict__ pSrcB,
+                              uint32_t blockSize,
+                              float32_t *__restrict__ pRes);
+
+/** -------------------------------------------------------
+    @brief Glue code for parallel dot product of 16-bit integer vectors.
+    @param[in]  pSrcA      points to the first input vector
+    @param[in]  pSrcB      points to the second input vector
+    @param[in]  blockSize  number of samples in each vector
+    @param[in]  nPE        number of parallel processing units
+    @param[out] pRes     output result returned here
+    @return     none
+*/
+
+void plp_dot_prod_i16_parallel(const int16_t *__restrict__ pSrcA,
+                               const int16_t *__restrict__ pSrcB,
                                uint32_t blockSize,
+                               uint32_t nPE,
+                               int32_t *__restrict__ pRes);
+
+/** -------------------------------------------------------
+    @brief Glue code for parallel dot product of 16-bit fixed point vectors.
+    @param[in]  pSrcA      points to the first input vector
+    @param[in]  pSrcB      points to the second input vector
+    @param[in]  blockSize  number of samples in each vector
+    @param[in]  deciPoint  decimal point for right shift
+    @param[in]  nPE        number of parallel processing units
+    @param[out] pRes     output result returned here
+    @return     none
+*/
+
+void plp_dot_prod_q16_parallel(const int16_t *__restrict__ pSrcA,
+                               const int16_t *__restrict__ pSrcB,
+                               uint32_t blockSize,
+                               uint32_t deciPoint,
+                               uint32_t nPE,
+                               int32_t *__restrict__ pRes);
+
+/** -------------------------------------------------------
+    @brief Glue code for parallel dot product of 16-bit float vectors.
+    @param[in]  pSrcA      points to the first input vector
+    @param[in]  pSrcB      points to the second input vector
+    @param[in]  blockSize  number of samples in each vector
+    @param[in]  nPE        number of parallel processing units
+    @param[out] pRes     output result returned here
+    @return     none
+*/
+
+void plp_dot_prod_f16_parallel(const float16_t *__restrict__ pSrcA,
+                               const float16_t *__restrict__ pSrcB,
+                               uint32_t blockSize,
+                               uint32_t nPE,
                                float32_t *__restrict__ pRes);
 
+/** -------------------------------------------------------
+    @brief Parallel dot product with interleaved access of 16-bit integer vectors kernel for XPULPV2
+    extension.
+    @param[in]  S     points to the instance structure for integer parallel dot product
+    @return     none
+*/
+
+void plp_dot_prod_i16p_xpulpv2(void *S);
+
+/** -------------------------------------------------------
+    @brief Parallel dot product with interleaved access of 16-bit fixed point vectors kernel for
+    XPULPV2 extension.
+    @param[in]  S     points to the instance structure for fixed point parallel dot product
+    @return     none
+*/
+
+void plp_dot_prod_q16p_xpulpv2(void *S);
+
+/** -------------------------------------------------------
+    @brief Parallel dot product with interleaved access of 16-bit float vectors kernel for XPULPV2
+    extension.
+    @param[in]  S     points to the instance structure for float parallel dot product
+    @return     none
+*/
+
+void plp_dot_prod_f16p_xpulpv2(void *S);
 
 /** -------------------------------------------------------
     @brief Glue code for dot product of 16-bit integer vectors.

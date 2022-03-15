@@ -1,7 +1,7 @@
 /* =====================================================================
  * Project:      PULP DSP Library
- * Title:        plp_dot_prod_i32_parallel.c
- * Description:  32-bit integer parallel dot product glue code
+ * Title:        plp_dot_prod_i16_parallel.c
+ * Description:  16-bit integer parallel dot product glue code
  *
  * $Date:        03. Jun 2019
  * $Revision:    V0
@@ -54,8 +54,8 @@
   @return        none
  */
 
-void plp_dot_prod_i32_parallel(const int32_t *__restrict__ pSrcA,
-                               const int32_t *__restrict__ pSrcB,
+void plp_dot_prod_i16_parallel(const int16_t *__restrict__ pSrcA,
+                               const int16_t *__restrict__ pSrcB,
                                uint32_t blockSize,
                                uint32_t nPE,
                                int32_t *__restrict__ pRes) {
@@ -68,7 +68,7 @@ void plp_dot_prod_i32_parallel(const int32_t *__restrict__ pSrcA,
         uint32_t i, tmpblkSizePE = blockSize / nPE;
         int32_t resBuffer[hal_cl_nb_pe_cores()];
         
-        plp_dot_prod_instance_i32 S;
+        plp_dot_prod_instance_i16 S;
 
         // Initialize the plp_dot_prod_instance
         S.pSrcA = pSrcA;
@@ -78,7 +78,7 @@ void plp_dot_prod_i32_parallel(const int32_t *__restrict__ pSrcA,
         S.resBuffer = resBuffer;
 
         // Fork the dot product to nPE cores (i.e. processing units)
-        hal_cl_team_fork(nPE, plp_dot_prod_i32p_xpulpv2, (void *)&S);
+        hal_cl_team_fork(nPE, plp_dot_prod_i16p_xpulpv2, (void *)&S);
 
         int sum = 0;
         for (i = 0; i < nPE; i++) { // not necessary hal_cl_nb_pe_cores()
