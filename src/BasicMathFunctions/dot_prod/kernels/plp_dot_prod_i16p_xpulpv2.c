@@ -62,51 +62,33 @@ void plp_dot_prod_i16p_xpulpv2(void *S) {
     uint32_t nPE = args->nPE;
     int32_t *resBufferPE = &(args->resBuffer[core_id]);
 
-    uint32_t blkCnt;        /* Loop counter, temporal BlockSize */
-    int32_t sum1, sum2 = 0; /* Temporary return variable */
+    uint32_t blkIdx; /* Loop counter, temporal BlockSize */
+    int32_t sum = 0; /* Temporary return variable */
+
+    uint32_t coreOffset = blkSizePE * core_id;
 
 #if defined(PLP_MATH_LOOPUNROLL)
 
-    // uint32_t endBlk = blkSizePE * core_id + (blkSizePE & 0xFFFFFFFE);
-
-    uint32_t tmpBS = (blkSizePE >> 2);
-    uint32_t coreOffset = blkSizePE * core_id;
-
-    for (blkCnt = 0; blkCnt < tmpBS; blkCnt++) {
-        /*
-        if (core_id == 0)
-            printf("a0 %d b0 %d a1 %d b1 %d\n", pSrcA + coreOffset + 4 * blkCnt,
-                   pSrcB + coreOffset + 4 * blkCnt, pSrcA + coreOffset + 4 * blkCnt + 2,
-                   pSrcB + coreOffset + 4 * blkCnt + 2);
-
-        v2s a0 = *((v2s *)((void *)(pSrcA + coreOffset + 4 * blkCnt)));
-        v2s b0 = *((v2s *)((void *)(pSrcB + coreOffset + 4 * blkCnt)));
-        v2s a1 = *((v2s *)((void *)(pSrcA + coreOffset + 4 * blkCnt + 2)));
-        v2s b1 = *((v2s *)((void *)(pSrcB + coreOffset + 4 * blkCnt + 2)));
-        sum1 = __SUMDOTP2(a0, b0, sum1);
-        sum2 = __SUMDOTP2(a1, b1, sum2);
-        */
-        sum1 = __MAC(sum1, pSrcA[coreOffset + 4 * blkCnt + 0], pSrcB[coreOffset + 4 * blkCnt + 0]);
-        sum1 = __MAC(sum1, pSrcA[coreOffset + 4 * blkCnt + 1], pSrcB[coreOffset + 4 * blkCnt + 1]);
-        sum2 = __MAC(sum2, pSrcA[coreOffset + 4 * blkCnt + 2], pSrcB[coreOffset + 4 * blkCnt + 2]);
-        sum2 = __MAC(sum2, pSrcA[coreOffset + 4 * blkCnt + 3], pSrcB[coreOffset + 4 * blkCnt + 3]);
+    /* TODO
+    uint32_t blkSizeEven = blkSizePE & 0xFFFFFFFE;
+    for (blkIdx = coreOffset; blkIdx < coreOffset + blkSizeEven; blkIdx += 2) {
+        sum = __MAC(sum, pSrcA[blkIdx], pSrcB[blkIdx]);
+        sum = __MAC(sum, pSrcA[blkIdx + 1], pSrcB[blkIdx + 1]);
     }
-    tmpBS = (blkSizePE % 4U);
-    /* TODO fix bug
-    for (int i = 0; i < tmpBS; i++) {
-        sum1 = __MAC(sum1, pSrcA[coreOffset + 4 * blkCnt + i], pSrcB[coreOffset + 4 * blkCnt + i]);
+    if (blkSizePE & 1U) {
+        sum = __MAC(sum, pSrcA[blkIdx], pSrcB[blkIdx]);
     }
     */
 
 #else // PLP_MATH_LOOPUNROLL
 
-    for (blkCnt = blkSizePE * core_id; blkCnt < blkSizePE * core_id + blkSizePE; blkCnt++) {
-        sum1 = __MAC(sum1, pSrcA[blkCnt], pSrcB[blkCnt]);
+    for (blkIdx = coreOffset; blkIdx < coreOffset + blkSizePE; blkIdx++) {
+        sum = __MAC(sum, pSrcA[blkIdx], pSrcB[blkIdx]);
     }
 
 #endif // PLP_MATH_LOOPUNROLL
 
-    *resBufferPE = sum1 + sum2;
+    *resBufferPE = sum;
 }
 
 /**

@@ -63,26 +63,31 @@ void plp_dot_prod_q16p_xpulpv2(void *S) {
     uint32_t nPE = args->nPE;
     int32_t *resBufferPE = &(args->resBuffer[core_id]);
 
-    uint32_t blkCnt; /* Loop counter, temporal BlockSize */
-    int32_t sum = 0; /* Temporary return variable */
+    uint32_t blkIdx, remBS;
+    uint32_t coreOffset = blkSizePE * core_id;
+    int32_t sum = 0;
 
 #if defined(PLP_MATH_LOOPUNROLL)
 
-    int32_t x0, x1 = 0;
-    uint32_t loopCycles = (blkSizePE / nPE) & 0xFFFFFFFE;
-    for (blkCnt = blkSizePE * core_id; blkCnt < blkSizePE * core_id + loopCycles; blkCnt += 2) {
-        x0 = pSrcA[blkCnt] * pSrcB[blkCnt];
-        x1 = pSrcA[blkCnt + 1] * pSrcB[blkCnt + 1];
+    uint32_t blkSize4 = blkSizePE & 0xFFFFFFFC; // Make it divisible by 4
+    for (blkIdx = coreOffset; blkIdx < coreOffset + blkSize4; blkIdx += 4) {
+        v2s a0 = *((v2s *)((void *)(pSrcA + blkIdx)));
+        v2s b0 = *((v2s *)((void *)(pSrcB + blkIdx)));
+        v2s a1 = *((v2s *)((void *)(pSrcA + blkIdx + 2)));
+        v2s b1 = *((v2s *)((void *)(pSrcB + blkIdx + 2)));
+        int32_t x0 = __DOTP2(a0, b0);
+        int32_t x1 = __DOTP2(a1, b1);
         sum += __ADDROUNDNORM_REG(x0, x1, deciPoint);
     }
-    if (blkSizePE & 1U) {
-        sum += __ROUNDNORM_REG(pSrcA[blkCnt] * pSrcB[blkCnt], deciPoint);
+    remBS = blkSizePE % 4U;
+    for (uint32_t remIdx = blkIdx; remIdx < blkIdx + remBS; remIdx++) {
+        sum += __ROUNDNORM_REG(pSrcA[remIdx] * pSrcB[remIdx], deciPoint);
     }
 
 #else // PLP_MATH_LOOPUNROLL
 
-    for (blkCnt = blkSizePE * core_id; blkCnt < blkSizePE * core_id + blkSizePE; blkCnt++) {
-        sum += __ROUNDNORM_REG(pSrcA[blkCnt] * pSrcB[blkCnt], deciPoint);
+    for (blkIdx = coreOffset; blkIdx < coreOffset + blkSizePE; blkIdx++) {
+        sum += __ROUNDNORM_REG(pSrcA[blkIdx] * pSrcB[blkIdx], deciPoint);
     }
 
 #endif // PLP_MATH_LOOPUNROLL

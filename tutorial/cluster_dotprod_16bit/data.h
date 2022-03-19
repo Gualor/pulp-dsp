@@ -1,10 +1,11 @@
 #ifndef DATA_H
 #define DATA_H
 
+#include "plp_math.h"
 #include "rtos_hal.h"
 
 #define VLEN 1000
-#define DECIPOINT 2
+#define DECIPOINT 4
 
 HAL_CL_L1 int16_t a_i16_cl[VLEN] = {
     58,  48,  8,   -4,  65,  69,   -59,  6,   90,  -78, -99, 76,   -62,  -30, -29, 17,   -73, -32,
@@ -126,8 +127,9 @@ HAL_CL_L1 int16_t b_i16_cl[VLEN] = {
 
 // TODO: add float16 data and type support
 
-/* Dot product results. */
 HAL_CL_L1 int32_t res_i16 = -49346;
-HAL_CL_L1 int32_t res_q16 = -12225;
+/* The true res_q16 is computed using floating point operations,
+ * all q16 dotprod functions will approximate this value. */
+HAL_CL_L1 float32_t res_q16 = -3084.125;
 
 #endif /* DATA_H */

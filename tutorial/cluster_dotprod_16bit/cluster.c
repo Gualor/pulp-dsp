@@ -90,7 +90,7 @@ void cluster_entry_q16(void *args) {
 
     hal_perf_stop(&perf);
 
-    printf("The true result is %d, the calculated result is %d.\n", res_q16, result);
+    printf("The true result is %.04f, the calculated result is %d.\n", res_q16, result);
     printf("Total cycles: %d\n", hal_perf_read(HAL_PERF_CYCLES));
     printf("Instructions: %d\n", hal_perf_read(HAL_PERF_INSTR));
 
@@ -105,7 +105,7 @@ void cluster_entry_q16(void *args) {
 
     hal_perf_stop(&perf);
 
-    printf("The true result is %d, the calculated result is %d.\n", res_q16, result);
+    printf("The true result is %.04f, the calculated result is %d.\n", res_q16, result);
     printf("Total cycles: %d\n", hal_perf_read(HAL_PERF_CYCLES));
     printf("Instructions: %d\n", hal_perf_read(HAL_PERF_INSTR));
 

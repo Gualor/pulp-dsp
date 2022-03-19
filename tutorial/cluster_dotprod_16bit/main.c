@@ -13,12 +13,12 @@ static int test_entry(void) {
         return -1;
     }
 
-#if defined(INT16_TEST) && !defined(Q16_TEST) && !defined(FLOAT16_TEST)
+#if defined(INT16_TEST)
     pi_cluster_send_task_to_cl(&cluster_dev, pi_cluster_task(&cl_task, cluster_entry_i16, NULL));
-#elif defined(INT16_TEST) && !defined(Q16_TEST) && !defined(FLOAT16_TEST)
+#elif defined(Q16_TEST)
     pi_cluster_send_task_to_cl(&cluster_dev, pi_cluster_task(&cl_task, cluster_entry_q16, NULL));
 #else
-    pi_cluster_send_task_to_cl(&cluster_dev, pi_cluster_task(&cl_task, cluster_entry_q16, NULL));
+    pi_cluster_send_task_to_cl(&cluster_dev, pi_cluster_task(&cl_task, cluster_entry_i16, NULL));
 #endif
 
     pi_cluster_close(&cluster_dev);

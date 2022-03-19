@@ -112,7 +112,7 @@
 #include "rtos_hal.h"
 
 typedef float float32_t;
-typedef float float16_t; // TODO: add support for 16-bit floating point types
+typedef uint16_t float16_t; // TODO: add support for 16-bit floating point types
 
 //#define PLP_MATH_IBEX // previously called zero-riscy
 #define PLP_MATH_RISCY
