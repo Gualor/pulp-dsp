@@ -3,7 +3,7 @@
  * Title:        plp_dot_prod_f16_parallel.c
  * Description:  16-bit float parallel dot product glue code
  *
- * $Date:        03. Jun 2019
+ * $Date:        19. Mar 2022
  * $Revision:    V0
  *
  * Target Processor: PULP cores
@@ -11,7 +11,7 @@
 /*
  * Copyright (C) 2019 ETH Zurich and University of Bologna.
  *
- * Author: Xiaying Wang, ETH Zurich
+ * Author: Lorenzo Gualniera
  *
  * SPDX-License-Identifier: Apache-2.0
  *

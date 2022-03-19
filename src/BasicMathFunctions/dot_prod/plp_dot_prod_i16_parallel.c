@@ -3,7 +3,7 @@
  * Title:        plp_dot_prod_i16_parallel.c
  * Description:  16-bit integer parallel dot product glue code
  *
- * $Date:        03. Jun 2019
+ * $Date:        19. Mar 2022
  * $Revision:    V0
  *
  * Target Processor: PULP cores
@@ -11,7 +11,7 @@
 /*
  * Copyright (C) 2019 ETH Zurich and University of Bologna.
  *
- * Author: Xiaying Wang, ETH Zurich
+ * Author: Lorenzo Gualniera
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -81,33 +81,15 @@ void plp_dot_prod_i16_parallel(const int16_t *__restrict__ pSrcA,
         hal_cl_team_fork(nPE, plp_dot_prod_i16p_xpulpv2, (void *)&S);
 
         int sum = 0;
-        for (i = 0; i < nPE; i++) { // not necessary hal_cl_nb_pe_cores()
+        for (i = 0; i < nPE; i++) {
             sum += resBuffer[i];
         }
 
-        /* Using unroll here does not increase efficiency
-         * for small number of cores (e.g., 8 cores)
-         *
-        #if defined(PLP_MATH_LOOPUNROLL)
-
-                uint32_t remblk = (blockSize % nPE); // Block remainder
-                uint32_t remIdx = tmpblkSizePE * nPE;
-
-                for (i = remIdx; i < remIdx + ((remblk >> 1) << 1); i += 2) { // How many 2x MACs
-                    sum = __MAC(sum, pSrcA[i],   pSrcB[i]);
-                    sum = __MAC(sum, pSrcA[i+1], pSrcB[i+1]);
-                }
-                if (remblk & 1U) {
-                    sum = __MAC(sum, pSrcA[i], pSrcB[i]);
-                }
-
-        #else // PLP_MATH_LOOPUNROLL
-        */
+        // Dot product on remaining blocks, loopunroll does not increase
+        // performance here
         for (i = tmpblkSizePE * nPE; i < blockSize; i++) {
             sum = __MAC(sum, pSrcA[i], pSrcB[i]);
         }
-
-        //#endif
 
         *pRes = sum;
     }

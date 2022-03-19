@@ -3,7 +3,7 @@
  * Title:        plp_dot_prod_i16p_xpulpv2.c
  * Description:  16-bit integer scalar dot product for XPULPV2 with interleaved access
  *
- * $Date:        03. Jun 2019
+ * $Date:        19. Mar 2022
  * $Revision:    V0
  *
  * Target Processor: PULP cores
@@ -11,7 +11,7 @@
 /*
  * Copyright (C) 2019 ETH Zurich and University of Bologna.
  *
- * Author: Xiaying Wang, ETH Zurich
+ * Author: Lorenzo Gualniera
  *
  * SPDX-License-Identifier: Apache-2.0
  *
