@@ -15,9 +15,10 @@ ifeq ($(DOTP_TYPE), i16)
 PULP_CFLAGS += -DINT16_TEST
 else ifeq ($(DOTP_TYPE), q16)
 PULP_CFLAGS += -DQ16_TEST
+else ifeq ($(DOTP_TYPE), f16)
+PULP_CFLAGS += -DFLOAT16_TEST
 else
 PULP_CFLAGS += -DINT16_TEST
-#PULP_CFLAGS += -DFLOAT16_TEST TODO: Add f16 support
 endif
 
 -include $(RULES_DIR)/pmsis_rules.mk
