@@ -62,33 +62,35 @@ void plp_dot_prod_i16p_xpulpv2(void *S) {
     uint32_t nPE = args->nPE;
     int32_t *resBufferPE = &(args->resBuffer[core_id]);
 
-    uint32_t blkIdx; /* Loop counter, temporal BlockSize */
-    int32_t sum = 0; /* Temporary return variable */
-
+    uint32_t blkIdx, remBS;
     uint32_t coreOffset = blkSizePE * core_id;
+    int32_t sum1 = 0, sum2 = 0;
 
 #if defined(PLP_MATH_LOOPUNROLL)
 
-    /* TODO
-    uint32_t blkSizeEven = blkSizePE & 0xFFFFFFFE;
-    for (blkIdx = coreOffset; blkIdx < coreOffset + blkSizeEven; blkIdx += 2) {
-        sum = __MAC(sum, pSrcA[blkIdx], pSrcB[blkIdx]);
-        sum = __MAC(sum, pSrcA[blkIdx + 1], pSrcB[blkIdx + 1]);
+    uint32_t blkSize4 = blkSizePE & 0xFFFFFFFC; // Make it divisible by 4
+    for (blkIdx = coreOffset; blkIdx < coreOffset + blkSize4; blkIdx += 4) {
+        v2s a0 = *((v2s *)((void *)(pSrcA + blkIdx)));
+        v2s b0 = *((v2s *)((void *)(pSrcB + blkIdx)));
+        v2s a1 = *((v2s *)((void *)(pSrcA + blkIdx + 2)));
+        v2s b1 = *((v2s *)((void *)(pSrcB + blkIdx + 2)));
+        sum1 = __SUMDOTP2(a0, b0, sum1);
+        sum2 = __SUMDOTP2(a1, b1, sum2);
     }
-    if (blkSizePE & 1U) {
-        sum = __MAC(sum, pSrcA[blkIdx], pSrcB[blkIdx]);
+    remBS = blkSizePE % 4U;
+    for (uint32_t remIdx = blkIdx; remIdx < blkIdx + remBS; remIdx++) {
+        sum1 = __MAC(sum1, pSrcA[remIdx], pSrcB[remIdx]);
     }
-    */
 
 #else // PLP_MATH_LOOPUNROLL
 
     for (blkIdx = coreOffset; blkIdx < coreOffset + blkSizePE; blkIdx++) {
-        sum = __MAC(sum, pSrcA[blkIdx], pSrcB[blkIdx]);
+        sum1 = __MAC(sum1, pSrcA[blkIdx], pSrcB[blkIdx]);
     }
 
 #endif // PLP_MATH_LOOPUNROLL
 
-    *resBufferPE = sum;
+    *resBufferPE = sum1 + sum2;
 }
 
 /**
