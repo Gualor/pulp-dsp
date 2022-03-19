@@ -3,7 +3,21 @@ PULP_APP_FC_SRCS = main.c
 PULP_APP_CL_SRCS = cluster.c
 
 PULP_LDFLAGS += -lplpdsp -lm
-
 PULP_CFLAGS += -O3 -g -DRTOS_PMSIS -DARCHI_CORE_HAS_PULPV2
+
+ifdef NUM_CORES
+PULP_CFLAGS += -DNUM_CORES=$(NUM_CORES)
+else
+PULP_CFLAGS += -DNUM_CORES=1
+endif
+
+ifeq ($(DOTP_TYPE), i16)
+PULP_CFLAGS += -DINT16_TEST
+else ifeq ($(DOTP_TYPE), q16)
+PULP_CFLAGS += -DQ16_TEST
+else
+PULP_CFLAGS += -DINT16_TEST
+#PULP_CFLAGS += -DFLOAT16_TEST TODO: Add f16 support
+endif
 
 -include $(RULES_DIR)/pmsis_rules.mk

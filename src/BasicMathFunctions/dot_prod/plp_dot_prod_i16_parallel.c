@@ -45,7 +45,7 @@
  */
 
 /**
-  @brief Glue code for parallel dot product of 32-bit integer vectors.
+  @brief Glue code for parallel dot product of 16-bit integer vectors.
   @param[in]  pSrcA      points to the first input vector
   @param[in]  pSrcB      points to the second input vector
   @param[in]  blockSize  number of samples in each vector
@@ -67,7 +67,7 @@ void plp_dot_prod_i16_parallel(const int16_t *__restrict__ pSrcA,
 
         uint32_t i, tmpblkSizePE = blockSize / nPE;
         int32_t resBuffer[hal_cl_nb_pe_cores()];
-        
+
         plp_dot_prod_instance_i16 S;
 
         // Initialize the plp_dot_prod_instance
@@ -85,29 +85,29 @@ void plp_dot_prod_i16_parallel(const int16_t *__restrict__ pSrcA,
             sum += resBuffer[i];
         }
 
-/* Using unroll here does not increase efficiency 
- * for small number of cores (e.g., 8 cores)
- *
-#if defined(PLP_MATH_LOOPUNROLL)
- 
-        uint32_t remblk = (blockSize % nPE); // Block remainder
-        uint32_t remIdx = tmpblkSizePE * nPE;
+        /* Using unroll here does not increase efficiency
+         * for small number of cores (e.g., 8 cores)
+         *
+        #if defined(PLP_MATH_LOOPUNROLL)
 
-        for (i = remIdx; i < remIdx + ((remblk >> 1) << 1); i += 2) { // How many 2x MACs
-            sum = __MAC(sum, pSrcA[i],   pSrcB[i]);
-            sum = __MAC(sum, pSrcA[i+1], pSrcB[i+1]);
-        }
-        if (remblk & 1U) {
-            sum = __MAC(sum, pSrcA[i], pSrcB[i]);
-        }
+                uint32_t remblk = (blockSize % nPE); // Block remainder
+                uint32_t remIdx = tmpblkSizePE * nPE;
 
-#else // PLP_MATH_LOOPUNROLL
-*/
+                for (i = remIdx; i < remIdx + ((remblk >> 1) << 1); i += 2) { // How many 2x MACs
+                    sum = __MAC(sum, pSrcA[i],   pSrcB[i]);
+                    sum = __MAC(sum, pSrcA[i+1], pSrcB[i+1]);
+                }
+                if (remblk & 1U) {
+                    sum = __MAC(sum, pSrcA[i], pSrcB[i]);
+                }
+
+        #else // PLP_MATH_LOOPUNROLL
+        */
         for (i = tmpblkSizePE * nPE; i < blockSize; i++) {
             sum = __MAC(sum, pSrcA[i], pSrcB[i]);
         }
 
-//#endif
+        //#endif
 
         *pRes = sum;
     }

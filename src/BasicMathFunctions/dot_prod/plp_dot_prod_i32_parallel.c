@@ -67,7 +67,7 @@ void plp_dot_prod_i32_parallel(const int32_t *__restrict__ pSrcA,
 
         uint32_t i, tmpblkSizePE = blockSize / nPE;
         int32_t resBuffer[hal_cl_nb_pe_cores()];
-        
+
         plp_dot_prod_instance_i32 S;
 
         // Initialize the plp_dot_prod_instance
@@ -85,29 +85,29 @@ void plp_dot_prod_i32_parallel(const int32_t *__restrict__ pSrcA,
             sum += resBuffer[i];
         }
 
-/* Using unroll here does not increase efficiency 
- * for small number of cores (e.g., 8 cores)
- *
-#if defined(PLP_MATH_LOOPUNROLL)
- 
-        uint32_t remblk = (blockSize % nPE); // Block remainder
-        uint32_t remIdx = tmpblkSizePE * nPE;
+        /* Using unroll here does not increase efficiency
+         * for small number of cores (e.g., 8 cores)
+         *
+        #if defined(PLP_MATH_LOOPUNROLL)
 
-        for (i = remIdx; i < remIdx + ((remblk >> 1) << 1); i += 2) { // How many 2x MACs
-            sum = __MAC(sum, pSrcA[i],   pSrcB[i]);
-            sum = __MAC(sum, pSrcA[i+1], pSrcB[i+1]);
-        }
-        if (remblk & 1U) {
-            sum = __MAC(sum, pSrcA[i], pSrcB[i]);
-        }
+                uint32_t remblk = (blockSize % nPE); // Block remainder
+                uint32_t remIdx = tmpblkSizePE * nPE;
 
-#else // PLP_MATH_LOOPUNROLL
-*/
+                for (i = remIdx; i < remIdx + ((remblk >> 1) << 1); i += 2) { // How many 2x MACs
+                    sum = __MAC(sum, pSrcA[i],   pSrcB[i]);
+                    sum = __MAC(sum, pSrcA[i+1], pSrcB[i+1]);
+                }
+                if (remblk & 1U) {
+                    sum = __MAC(sum, pSrcA[i], pSrcB[i]);
+                }
+
+        #else // PLP_MATH_LOOPUNROLL
+        */
         for (i = tmpblkSizePE * nPE; i < blockSize; i++) {
             sum = __MAC(sum, pSrcA[i], pSrcB[i]);
         }
 
-//#endif
+        //#endif
 
         *pRes = sum;
     }

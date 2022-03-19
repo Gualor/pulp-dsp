@@ -63,17 +63,16 @@ void plp_dot_prod_q16p_xpulpv2(void *S) {
     uint32_t nPE = args->nPE;
     int32_t *resBufferPE = &(args->resBuffer[core_id]);
 
-    uint32_t blkCnt;    /* Loop counter, temporal BlockSize */
-    int32_t sum = 0;    /* Temporary return variable */
-    //hal_team_barrier();
+    uint32_t blkCnt; /* Loop counter, temporal BlockSize */
+    int32_t sum = 0; /* Temporary return variable */
 
 #if defined(PLP_MATH_LOOPUNROLL)
 
     int32_t x0, x1 = 0;
     uint32_t loopCycles = (blkSizePE / nPE) & 0xFFFFFFFE;
     for (blkCnt = blkSizePE * core_id; blkCnt < blkSizePE * core_id + loopCycles; blkCnt += 2) {
-        x0 = pSrcA[blkCnt] * pSrcB[blkCnt]);
-        x1 = pSrcA[blkCnt + 1] * pSrcB[blkCnt + 1]);
+        x0 = pSrcA[blkCnt] * pSrcB[blkCnt];
+        x1 = pSrcA[blkCnt + 1] * pSrcB[blkCnt + 1];
         sum += __ADDROUNDNORM_REG(x0, x1, deciPoint);
     }
     if (blkSizePE & 1U) {
@@ -85,7 +84,7 @@ void plp_dot_prod_q16p_xpulpv2(void *S) {
     for (blkCnt = blkSizePE * core_id; blkCnt < blkSizePE * core_id + blkSizePE; blkCnt++) {
         sum += __ROUNDNORM_REG(pSrcA[blkCnt] * pSrcB[blkCnt], deciPoint);
     }
-    
+
 #endif // PLP_MATH_LOOPUNROLL
 
     *resBufferPE = sum;

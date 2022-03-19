@@ -77,8 +77,10 @@ void plp_dot_prod_i16s_xpulpv2(const int16_t *__restrict__ pSrcA,
         sum1 = __SUMDOTP2(a0, b0, sum1);
         sum2 = __SUMDOTP2(a1, b1, sum2);
 
-        // sum = __MAC(sum, (*pSrcA++), (*pSrcB++));
-        // sum = __MAC(sum, (*pSrcA++), (*pSrcB++));
+        // sum1 = __MAC(sum1, (*pSrcA++), (*pSrcB++));
+        // sum1 = __MAC(sum1, (*pSrcA++), (*pSrcB++));
+        // sum2 = __MAC(sum2, (*pSrcA++), (*pSrcB++));
+        // sum2 = __MAC(sum2, (*pSrcA++), (*pSrcB++));
     }
 
     tmpBS = (blockSize % 4U);

@@ -24,7 +24,7 @@
 
 /**
  *  \mainpage PULP DSP Software Library
- * 
+ *
  *   Introduction
  *   ------------
  *
@@ -49,7 +49,8 @@
  *   The library has separate functions for operating on 8-bit integers, 16-bit integers,
  *   32-bit integer and 32-bit floating-point values.
  *
- *   The naming scheme of the functions follows the following pattern (for example plp_dot_prod_i32s):
+ *   The naming scheme of the functions follows the following pattern (for example
+ * plp_dot_prod_i32s):
  *
  *   <pre>
  *   < plp > _ < function name > _ < data type > < precision > < method > _ < isa extension >,
@@ -65,8 +66,8 @@
  *   ..
  *
  *
- *   If the user wants to use a parallel implementation, they can call the glue code functions with '_parallel'
- *   in the function name.
+ *   If the user wants to use a parallel implementation, they can call the glue code functions with
+ * '_parallel' in the function name.
  *
  *
  *   The library is released under Apache v2.0 license. More details can be found in `LICENSE`.
@@ -75,7 +76,7 @@
 
 /**
  * @defgroup groupMath Basic Math Functions
-*/
+ */
 
 /**
  * @defgroup groupCmplxMath Complex Math Functions
@@ -111,11 +112,11 @@
 #include "rtos_hal.h"
 
 typedef float float32_t;
-typedef float float16_t;
+typedef float float16_t; // TODO: add support for 16-bit floating point types
 
 //#define PLP_MATH_IBEX // previously called zero-riscy
 #define PLP_MATH_RISCY
-//#define PLP_MATH_LOOPUNROLL
+#define PLP_MATH_LOOPUNROLL
 
 /** -------------------------------------------------------
     @struct plp_dot_prod_instance_i32
@@ -248,9 +249,9 @@ typedef struct {
 */
 typedef struct {
     const float32_t *pSrc; // pointer to the vector
-    uint32_t blkSizePE;     // number of samples in each vector
-    uint32_t nPE;           // number of processing units
-    float32_t *pDst;        // pointer to result vector
+    uint32_t blkSizePE;    // number of samples in each vector
+    uint32_t nPE;          // number of processing units
+    float32_t *pDst;       // pointer to result vector
 } plp_log_instance_f32;
 
 /** -------------------------------------------------------
@@ -344,10 +345,10 @@ typedef struct {
 /**
  * @brief Instance structure for the parallel CFFT Q16
  * @param[in]       fft_struct          cfft_q16 struct
- * @param[in/out]   p1                  points to the complex data buffer of size <code>2*fftLen</code>.
- * Processing occurs in-place.
- * @param[in]       ifftFlag            flag that selects forward (ifftFlag=0) or inverse (ifftFlag=1)
- * transform.
+ * @param[in/out]   p1                  points to the complex data buffer of size
+ * <code>2*fftLen</code>. Processing occurs in-place.
+ * @param[in]       ifftFlag            flag that selects forward (ifftFlag=0) or inverse
+ * (ifftFlag=1) transform.
  * @param[in]       bitReverseFlag      flag that enables (bitReverseFlag=1) of disables
  * (bitReverseFlag=0) bit reversal of output.
  * @param[in]       deciPoint           decimal point for right shift
@@ -417,11 +418,11 @@ typedef struct {
     @struct plp_triangular_filter_f32
     @brief structure containing non-zero values of triangular filterbanks
     @param  V               pointer to an array containing all non-zero filter
-    			    coefficients of the triangular filters
+                            coefficients of the triangular filters
     @param  firstValue      pointer to array containing indexes of the
-    			    first non-zero coefficients of the filters
+                            first non-zero coefficients of the filters
     @param  filterLength    pointer to array containing lengths of the
-    			    non-zero region of each filter
+                            non-zero region of each filter
     @param  nFilters        total amount of triangular filters (n_mels)
 */
 typedef struct {
@@ -1462,8 +1463,6 @@ typedef struct {
     float *__restrict__ pDst;
 } plp_mat_copy_stride_instance_f32;
 
-
-
 typedef enum {
     PLP_DWT_WAVELET_OTHER,
     PLP_DWT_WAVELET_HAAR,
@@ -1528,48 +1527,45 @@ typedef enum {
     PLP_DWT_WAVELET_COIF17
 } plp_dwt_wavelet_type;
 
-
 typedef struct {
 
-   uint32_t length;
-   plp_dwt_wavelet_type type;
+    uint32_t length;
+    plp_dwt_wavelet_type type;
 
-   float32_t *dec_lo; /* decomposition lowpass */
-   float32_t *dec_hi; /* decomposition highpass */
+    float32_t *dec_lo; /* decomposition lowpass */
+    float32_t *dec_hi; /* decomposition highpass */
 
-   float32_t *rec_lo; /* reconstruction lowpass */
-   float32_t *rec_hi; /* reconstruction highpass */
+    float32_t *rec_lo; /* reconstruction lowpass */
+    float32_t *rec_hi; /* reconstruction highpass */
 
 } plp_dwt_wavelet_f32;
 
 typedef struct {
 
-   uint32_t length;
-   plp_dwt_wavelet_type type;
+    uint32_t length;
+    plp_dwt_wavelet_type type;
 
-   int32_t *dec_lo; /* decomposition lowpass */
-   int32_t *dec_hi; /* decomposition highpass */
+    int32_t *dec_lo; /* decomposition lowpass */
+    int32_t *dec_hi; /* decomposition highpass */
 } plp_dwt_wavelet_q32;
 
 typedef struct {
 
-   uint32_t length;
-   plp_dwt_wavelet_type type;
+    uint32_t length;
+    plp_dwt_wavelet_type type;
 
-   int16_t *dec_lo; /* decomposition lowpass */
-   int16_t *dec_hi; /* decomposition highpass */
+    int16_t *dec_lo; /* decomposition lowpass */
+    int16_t *dec_hi; /* decomposition highpass */
 } plp_dwt_wavelet_q16;
 
 typedef struct {
 
-   uint32_t length;
-   plp_dwt_wavelet_type type;
+    uint32_t length;
+    plp_dwt_wavelet_type type;
 
-   int8_t *dec_lo; /* decomposition lowpass */
-   int8_t *dec_hi; /* decomposition highpass */
+    int8_t *dec_lo; /* decomposition lowpass */
+    int8_t *dec_hi; /* decomposition highpass */
 } plp_dwt_wavelet_q8;
-
-
 
 typedef enum {
     PLP_DWT_MODE_ZERO,
@@ -1581,11 +1577,10 @@ typedef enum {
     PLP_DWT_MODE_ANTIREFLECT
 } plp_dwt_extension_mode;
 
-
 /** -------------------------------------------------------
     @struct plp_dwt_instance_f32
     @brief Instance structure for float parallel dwt.
-    @param[in]  pSrc      points to the input buffer 
+    @param[in]  pSrc      points to the input buffer
     @param[in]  length    length of input buffer
     @param[in]  wavelet   wavelet structure for calculating DWT
     @param[in]  mode      boundary extension mode
@@ -1595,20 +1590,20 @@ typedef enum {
     @param[out] pDstD     points to ouput buffer with Detailed coefficients
 */
 typedef struct {
-    const float32_t *pSrc;             //  points to the input buffer
-    uint32_t length;                   // length of input buffer
+    const float32_t *pSrc;       //  points to the input buffer
+    uint32_t length;             // length of input buffer
     plp_dwt_wavelet_f32 wavelet; // wavelet structure for calculating DWT
-    plp_dwt_extension_mode mode;       // boundary extension mode
-    uint32_t nPE;                      // number of processing units
+    plp_dwt_extension_mode mode; // boundary extension mode
+    uint32_t nPE;                // number of processing units
 
-    float32_t *pDstA;                  // output buffer with Approximate coefficients
-    float32_t *pDstD;                  // ouput buffer with Detailed coefficients
+    float32_t *pDstA; // output buffer with Approximate coefficients
+    float32_t *pDstD; // ouput buffer with Detailed coefficients
 } plp_dwt_instance_f32;
 
 /** -------------------------------------------------------
     @struct plp_dwt_instance_q32
     @brief Instance structure for Q32 parallel dwt.
-    @param[in]  pSrc      points to the input buffer 
+    @param[in]  pSrc      points to the input buffer
     @param[in]  length    length of input buffer
     @param[in]  wavelet   wavelet structure for calculating DWT
     @param[in]  mode      boundary extension mode
@@ -1618,21 +1613,20 @@ typedef struct {
     @param[out] pDstD     points to ouput buffer with Detailed coefficients
 */
 typedef struct {
-    const int32_t *pSrc;  //  points to the input buffer
-    uint32_t length;        // length of input buffer
+    const int32_t *pSrc;         //  points to the input buffer
+    uint32_t length;             // length of input buffer
     plp_dwt_wavelet_q32 wavelet; // wavelet structure for calculating DWT
     plp_dwt_extension_mode mode; // boundary extension mode
-    uint32_t nPE;           // number of processing units
+    uint32_t nPE;                // number of processing units
 
-    int32_t *pDstA;   // output buffer with Approximate coefficients
-    int32_t *pDstD;   // ouput buffer with Detailed coefficients
+    int32_t *pDstA; // output buffer with Approximate coefficients
+    int32_t *pDstD; // ouput buffer with Detailed coefficients
 } plp_dwt_instance_q32;
-
 
 /** -------------------------------------------------------
     @struct plp_dwt_instance_q16
     @brief Instance structure for Q16 parallel dwt.
-    @param[in]  pSrc      points to the input buffer 
+    @param[in]  pSrc      points to the input buffer
     @param[in]  length    length of input buffer
     @param[in]  wavelet   wavelet structure for calculating DWT
     @param[in]  mode      boundary extension mode
@@ -1642,20 +1636,20 @@ typedef struct {
     @param[out] pDstD     points to ouput buffer with Detailed coefficients
 */
 typedef struct {
-    const int16_t *pSrc;  //  points to the input buffer
-    uint32_t length;        // length of input buffer
+    const int16_t *pSrc;         //  points to the input buffer
+    uint32_t length;             // length of input buffer
     plp_dwt_wavelet_q16 wavelet; // wavelet structure for calculating DWT
     plp_dwt_extension_mode mode; // boundary extension mode
-    uint32_t nPE;           // number of processing units
+    uint32_t nPE;                // number of processing units
 
-    int16_t *pDstA;   // output buffer with Approximate coefficients
-    int16_t *pDstD;   // ouput buffer with Detailed coefficients
+    int16_t *pDstA; // output buffer with Approximate coefficients
+    int16_t *pDstD; // ouput buffer with Detailed coefficients
 } plp_dwt_instance_q16;
 
 /** -------------------------------------------------------
     @struct plp_dwt_instance_q8
     @brief Instance structure for Q8 parallel dwt.
-    @param[in]  pSrc      points to the input buffer 
+    @param[in]  pSrc      points to the input buffer
     @param[in]  length    length of input buffer
     @param[in]  wavelet   wavelet structure for calculating DWT
     @param[in]  mode      boundary extension mode
@@ -1665,19 +1659,19 @@ typedef struct {
     @param[out] pDstD     points to ouput buffer with Detailed coefficients
 */
 typedef struct {
-    const int8_t *pSrc;  //  points to the input buffer
-    uint32_t length;        // length of input buffer
-    plp_dwt_wavelet_q8 wavelet; // wavelet structure for calculating DWT
+    const int8_t *pSrc;          //  points to the input buffer
+    uint32_t length;             // length of input buffer
+    plp_dwt_wavelet_q8 wavelet;  // wavelet structure for calculating DWT
     plp_dwt_extension_mode mode; // boundary extension mode
-    uint32_t nPE;           // number of processing units
+    uint32_t nPE;                // number of processing units
 
-    int8_t *pDstA;   // output buffer with Approximate coefficients
-    int8_t *pDstD;   // ouput buffer with Detailed coefficients
+    int8_t *pDstA; // output buffer with Approximate coefficients
+    int8_t *pDstD; // ouput buffer with Detailed coefficients
 } plp_dwt_instance_q8;
 
-
 #define PLP_DWT_DEC_LEN(SIG_LEN, WAVELET, LEVEL) plp_dwt_dec_len(SIG_LEN, WAVELET.length, LEVEL)
-#define PLP_DWT_DEC_TEMP_LEN(SRC_LEN, WAVELET_LEN) (((SRC_LEN+WAVELET_LEN-1)/2 + ((SRC_LEN+WAVELET_LEN-1)/2 + WAVELET_LEN-1))/2)
+#define PLP_DWT_DEC_TEMP_LEN(SRC_LEN, WAVELET_LEN)                                                 \
+    (((SRC_LEN + WAVELET_LEN - 1) / 2 + ((SRC_LEN + WAVELET_LEN - 1) / 2 + WAVELET_LEN - 1)) / 2)
 #define PLP_DWT_OUTPUT_LENGTH(SIG_LEN, WAVELET_LEN) ((SIG_LEN + WAVELET_LEN - 1) >> 1)
 
 uint32_t plp_dwt_max_level(uint32_t sig_len, uint32_t wavelet_len);
@@ -2203,9 +2197,7 @@ void plp_dot_prod_q8s_xpulpv2(const int8_t *__restrict__ pSrcA,
    @return        none
 */
 
-void plp_abs_i32(const int32_t * pSrc,
-                 int32_t * pDst,
-                 uint32_t blockSize);
+void plp_abs_i32(const int32_t *pSrc, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
    @brief Element-by-element absolute value of 32-bit integer vectors kernel for RV32IM extension.
@@ -2215,9 +2207,7 @@ void plp_abs_i32(const int32_t * pSrc,
    @return        none
 */
 
-void plp_abs_i32s_rv32im(const int32_t * pSrc,
-                         int32_t * pDst,
-                         uint32_t blockSize);
+void plp_abs_i32s_rv32im(const int32_t *pSrc, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
    @brief Element-by-element absolute value of 32-bit integer vectors kernel for XPULPV2 extension.
@@ -2227,9 +2217,7 @@ void plp_abs_i32s_rv32im(const int32_t * pSrc,
    @return        none
 */
 
-void plp_abs_i32s_xpulpv2(const int32_t * pSrc,
-                          int32_t * pDst,
-                          uint32_t blockSize);
+void plp_abs_i32s_xpulpv2(const int32_t *pSrc, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
    @brief Glue code for absolute value of 16-bit integer vectors.
@@ -2239,9 +2227,7 @@ void plp_abs_i32s_xpulpv2(const int32_t * pSrc,
    @return        none
 */
 
-void plp_abs_i16(const int16_t * pSrc,
-                 int16_t * pDst,
-                 uint32_t blockSize);
+void plp_abs_i16(const int16_t *pSrc, int16_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
    @brief Element-by-element absolute value of 16-bit integer vectors kernel for RV32IM extension.
@@ -2251,9 +2237,7 @@ void plp_abs_i16(const int16_t * pSrc,
    @return        none
 */
 
-void plp_abs_i16s_rv32im(const int16_t * pSrc,
-                         int16_t * pDst,
-                         uint32_t blockSize);
+void plp_abs_i16s_rv32im(const int16_t *pSrc, int16_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
    @brief Element-by-element absolute value of 16-bit integer vectors kernel for XPULPV2 extension.
@@ -2263,9 +2247,7 @@ void plp_abs_i16s_rv32im(const int16_t * pSrc,
    @return        none
 */
 
-void plp_abs_i16s_xpulpv2(const int16_t * pSrc,
-                          int16_t * pDst,
-                          uint32_t blockSize);
+void plp_abs_i16s_xpulpv2(const int16_t *pSrc, int16_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
    @brief Glue code for absolute value of 8-bit integer vectors.
@@ -2275,9 +2257,7 @@ void plp_abs_i16s_xpulpv2(const int16_t * pSrc,
    @return        none
 */
 
-void plp_abs_i8(const int8_t * pSrc,
-                 int8_t * pDst,
-                 uint32_t blockSize);
+void plp_abs_i8(const int8_t *pSrc, int8_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
    @brief Element-by-element absolute value of 8-bit integer vectors kernel for RV32IM extension.
@@ -2287,9 +2267,7 @@ void plp_abs_i8(const int8_t * pSrc,
    @return        none
 */
 
-void plp_abs_i8s_rv32im(const int8_t * pSrc,
-                         int8_t * pDst,
-                         uint32_t blockSize);
+void plp_abs_i8s_rv32im(const int8_t *pSrc, int8_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
    @brief Element-by-element absolute value of 8-bit integer vectors kernel for XPULPV2 extension.
@@ -2299,9 +2277,7 @@ void plp_abs_i8s_rv32im(const int8_t * pSrc,
    @return        none
 */
 
-void plp_abs_i8s_xpulpv2(const int8_t * pSrc,
-                          int8_t * pDst,
-                          uint32_t blockSize);
+void plp_abs_i8s_xpulpv2(const int8_t *pSrc, int8_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Glue code for element-by-element addition of 32-bit integer vectors.
@@ -2312,10 +2288,7 @@ void plp_abs_i8s_xpulpv2(const int8_t * pSrc,
     @return        none
 */
 
-void plp_add_i32(const int32_t * pSrcA,
-                 const int32_t * pSrcB,
-                 int32_t * pDst,
-                 uint32_t blockSize);
+void plp_add_i32(const int32_t *pSrcA, const int32_t *pSrcB, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Element-by-element addition of 32-bit integer vectors kernel for RV32IM extension.
@@ -2326,9 +2299,9 @@ void plp_add_i32(const int32_t * pSrcA,
     @return        none
 */
 
-void plp_add_i32s_rv32im(const int32_t * pSrcA,
-                         const int32_t * pSrcB,
-                         int32_t * pDst,
+void plp_add_i32s_rv32im(const int32_t *pSrcA,
+                         const int32_t *pSrcB,
+                         int32_t *pDst,
                          uint32_t blockSize);
 
 /** -------------------------------------------------------
@@ -2340,9 +2313,9 @@ void plp_add_i32s_rv32im(const int32_t * pSrcA,
     @return        none
 */
 
-void plp_add_i32s_xpulpv2(const int32_t * pSrcA,
-                          const int32_t * pSrcB,
-                          int32_t * pDst,
+void plp_add_i32s_xpulpv2(const int32_t *pSrcA,
+                          const int32_t *pSrcB,
+                          int32_t *pDst,
                           uint32_t blockSize);
 
 /** -------------------------------------------------------
@@ -2354,10 +2327,7 @@ void plp_add_i32s_xpulpv2(const int32_t * pSrcA,
     @return        none
 */
 
-void plp_add_i16(const int16_t * pSrcA,
-                 const int16_t * pSrcB,
-                 int32_t * pDst,
-                 uint32_t blockSize);
+void plp_add_i16(const int16_t *pSrcA, const int16_t *pSrcB, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Element-by-element addition of 16-bit integer vectors kernel for RV32IM extension.
@@ -2368,9 +2338,9 @@ void plp_add_i16(const int16_t * pSrcA,
     @return        none
 */
 
-void plp_add_i16s_rv32im(const int16_t * pSrcA,
-                         const int16_t * pSrcB,
-                         int32_t * pDst,
+void plp_add_i16s_rv32im(const int16_t *pSrcA,
+                         const int16_t *pSrcB,
+                         int32_t *pDst,
                          uint32_t blockSize);
 
 /** -------------------------------------------------------
@@ -2382,9 +2352,9 @@ void plp_add_i16s_rv32im(const int16_t * pSrcA,
     @return        none
 */
 
-void plp_add_i16s_xpulpv2(const int16_t * pSrcA,
-                          const int16_t * pSrcB,
-                          int32_t * pDst,
+void plp_add_i16s_xpulpv2(const int16_t *pSrcA,
+                          const int16_t *pSrcB,
+                          int32_t *pDst,
                           uint32_t blockSize);
 
 /** -------------------------------------------------------
@@ -2396,10 +2366,7 @@ void plp_add_i16s_xpulpv2(const int16_t * pSrcA,
     @return        none
 */
 
-void plp_add_i8(const int8_t * pSrcA,
-                 const int8_t * pSrcB,
-                 int32_t * pDst,
-                 uint32_t blockSize);
+void plp_add_i8(const int8_t *pSrcA, const int8_t *pSrcB, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Element-by-element addition of 8-bit integer vectors kernel for RV32IM extension.
@@ -2410,10 +2377,10 @@ void plp_add_i8(const int8_t * pSrcA,
     @return        none
 */
 
-void plp_add_i8s_rv32im(const int8_t * pSrcA,
-                         const int8_t * pSrcB,
-                         int32_t * pDst,
-                         uint32_t blockSize);
+void plp_add_i8s_rv32im(const int8_t *pSrcA,
+                        const int8_t *pSrcB,
+                        int32_t *pDst,
+                        uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Element-by-element addition of 8-bit integer vectors kernel for XPULPV2 extension.
@@ -2424,10 +2391,10 @@ void plp_add_i8s_rv32im(const int8_t * pSrcA,
     @return        none
 */
 
-void plp_add_i8s_xpulpv2(const int8_t * pSrcA,
-                          const int8_t * pSrcB,
-                          int32_t * pDst,
-                          uint32_t blockSize);
+void plp_add_i8s_xpulpv2(const int8_t *pSrcA,
+                         const int8_t *pSrcB,
+                         int32_t *pDst,
+                         uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Glue code for element-by-element multiplication of 32-bit integer vectors.
@@ -2438,10 +2405,7 @@ void plp_add_i8s_xpulpv2(const int8_t * pSrcA,
     @return        none
 */
 
-void plp_mult_i32(const int32_t * pSrcA,
-                 const int32_t * pSrcB,
-                 int32_t * pDst,
-                 uint32_t blockSize);
+void plp_mult_i32(const int32_t *pSrcA, const int32_t *pSrcB, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Element-by-element multiplication of 32-bit integer vectors kernel for RV32IM extension.
@@ -2452,10 +2416,10 @@ void plp_mult_i32(const int32_t * pSrcA,
     @return        none
 */
 
-void plp_mult_i32s_rv32im(const int32_t * pSrcA,
-                         const int32_t * pSrcB,
-                         int32_t * pDst,
-                         uint32_t blockSize);
+void plp_mult_i32s_rv32im(const int32_t *pSrcA,
+                          const int32_t *pSrcB,
+                          int32_t *pDst,
+                          uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Element-by-element multiplication of 32-bit integer vectors kernel for XPULPV2 extension.
@@ -2466,10 +2430,10 @@ void plp_mult_i32s_rv32im(const int32_t * pSrcA,
     @return        none
 */
 
-void plp_mult_i32s_xpulpv2(const int32_t * pSrcA,
-                          const int32_t * pSrcB,
-                          int32_t * pDst,
-                          uint32_t blockSize);
+void plp_mult_i32s_xpulpv2(const int32_t *pSrcA,
+                           const int32_t *pSrcB,
+                           int32_t *pDst,
+                           uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Glue code for element-by-element multiplication of 16-bit integer vectors.
@@ -2480,10 +2444,7 @@ void plp_mult_i32s_xpulpv2(const int32_t * pSrcA,
     @return        none
 */
 
-void plp_mult_i16(const int16_t * pSrcA,
-                 const int16_t * pSrcB,
-                 int32_t * pDst,
-                 uint32_t blockSize);
+void plp_mult_i16(const int16_t *pSrcA, const int16_t *pSrcB, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Element-by-element multiplication of 16-bit integer vectors kernel for RV32IM extension.
@@ -2494,10 +2455,10 @@ void plp_mult_i16(const int16_t * pSrcA,
     @return        none
 */
 
-void plp_mult_i16s_rv32im(const int16_t * pSrcA,
-                         const int16_t * pSrcB,
-                         int32_t * pDst,
-                         uint32_t blockSize);
+void plp_mult_i16s_rv32im(const int16_t *pSrcA,
+                          const int16_t *pSrcB,
+                          int32_t *pDst,
+                          uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Element-by-element multiplication of 16-bit integer vectors kernel for XPULPV2 extension.
@@ -2508,10 +2469,10 @@ void plp_mult_i16s_rv32im(const int16_t * pSrcA,
     @return        none
 */
 
-void plp_mult_i16s_xpulpv2(const int16_t * pSrcA,
-                          const int16_t * pSrcB,
-                          int32_t * pDst,
-                          uint32_t blockSize);
+void plp_mult_i16s_xpulpv2(const int16_t *pSrcA,
+                           const int16_t *pSrcB,
+                           int32_t *pDst,
+                           uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Glue code for element-by-element multiplication of 8-bit integer vectors.
@@ -2522,10 +2483,7 @@ void plp_mult_i16s_xpulpv2(const int16_t * pSrcA,
     @return        none
 */
 
-void plp_mult_i8(const int8_t * pSrcA,
-                 const int8_t * pSrcB,
-                 int32_t * pDst,
-                 uint32_t blockSize);
+void plp_mult_i8(const int8_t *pSrcA, const int8_t *pSrcB, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Element-by-element multiplication of 8-bit integer vectors kernel for RV32IM extension.
@@ -2536,9 +2494,9 @@ void plp_mult_i8(const int8_t * pSrcA,
     @return        none
 */
 
-void plp_mult_i8s_rv32im(const int8_t * pSrcA,
-                         const int8_t * pSrcB,
-                         int32_t * pDst,
+void plp_mult_i8s_rv32im(const int8_t *pSrcA,
+                         const int8_t *pSrcB,
+                         int32_t *pDst,
                          uint32_t blockSize);
 
 /** -------------------------------------------------------
@@ -2550,9 +2508,9 @@ void plp_mult_i8s_rv32im(const int8_t * pSrcA,
     @return        none
 */
 
-void plp_mult_i8s_xpulpv2(const int8_t * pSrcA,
-                          const int8_t * pSrcB,
-                          int32_t * pDst,
+void plp_mult_i8s_xpulpv2(const int8_t *pSrcA,
+                          const int8_t *pSrcB,
+                          int32_t *pDst,
                           uint32_t blockSize);
 
 /** -------------------------------------------------------
@@ -2564,10 +2522,10 @@ void plp_mult_i8s_xpulpv2(const int8_t * pSrcA,
     @return        none
 */
 
-void plp_mult_f32(const float32_t * pSrcA,
-                 const float32_t * pSrcB,
-                 float32_t * pDst,
-                 uint32_t blockSize);
+void plp_mult_f32(const float32_t *pSrcA,
+                  const float32_t *pSrcB,
+                  float32_t *pDst,
+                  uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief Element-by-element multiplication of 32-bit float vectors kernel for XPULPV2 extension.
@@ -2578,10 +2536,10 @@ void plp_mult_f32(const float32_t * pSrcA,
     @return        none
 */
 
-void plp_mult_f32s_xpulpv2(const float32_t * pSrcA,
-                          const float32_t * pSrcB,
-                          float32_t * pDst,
-                          uint32_t blockSize);
+void plp_mult_f32s_xpulpv2(const float32_t *pSrcA,
+                           const float32_t *pSrcB,
+                           float32_t *pDst,
+                           uint32_t blockSize);
 
 /**
   @brief Glue code for parallel dot product of 32-bit float vectors.
@@ -2594,13 +2552,13 @@ void plp_mult_f32s_xpulpv2(const float32_t * pSrcA,
  */
 
 void plp_mult_f32_parallel(const float32_t *__restrict__ pSrcA,
-                               const float32_t *__restrict__ pSrcB,
-                               uint32_t blockSize,
-                               uint32_t nPE,
-                               float32_t *__restrict__ pDst);
+                           const float32_t *__restrict__ pSrcB,
+                           uint32_t blockSize,
+                           uint32_t nPE,
+                           float32_t *__restrict__ pDst);
 /**
- *   @brief Parallel multiplication with interleaved access of 32-bit float vectors kernel for XPULPV2
- *     extension.
+ *   @brief Parallel multiplication with interleaved access of 32-bit float vectors kernel for
+ * XPULPV2 extension.
  *       @param[in]  S     points to the instance structure for float parallel multiplication
  *         @return        none
  *          */
@@ -2617,9 +2575,9 @@ void plp_mult_f32p_xpulpv2(void *S);
  */
 
 void plp_log_f32_parallel(const float32_t *__restrict__ pSrc,
-                               uint32_t blockSize,
-                               uint32_t nPE,
-                               float32_t *__restrict__ pDst);
+                          uint32_t blockSize,
+                          uint32_t nPE,
+                          float32_t *__restrict__ pDst);
 
 /**
   @brief Parallel log with interleaved access of 32-bit float vectors kernel for XPULPV2
@@ -2638,7 +2596,7 @@ void plp_log_f32p_xpulpv2(void *S);
     @return     none
 */
 
-void plp_negate_i32(const int32_t * pSrc, int32_t * pDst, uint32_t blockSize);
+void plp_negate_i32(const int32_t *pSrc, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief      negate the elements of a vector for 32-bit integers on RV32IM
@@ -2648,7 +2606,7 @@ void plp_negate_i32(const int32_t * pSrc, int32_t * pDst, uint32_t blockSize);
     @return     none
 */
 
-void plp_negate_i32s_rv32im(const int32_t * pSrc, int32_t * pDst, uint32_t blockSize);
+void plp_negate_i32s_rv32im(const int32_t *pSrc, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief      negate the elements of a vector for 32-bit integers on XpulpV2
@@ -2658,7 +2616,7 @@ void plp_negate_i32s_rv32im(const int32_t * pSrc, int32_t * pDst, uint32_t block
     @return     none
 */
 
-void plp_negate_i32s_xpulpv2(const int32_t * pSrc, int32_t * pDst, uint32_t blockSize);
+void plp_negate_i32s_xpulpv2(const int32_t *pSrc, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of negate the elements of a vector for 16-bit integers
@@ -2668,7 +2626,7 @@ void plp_negate_i32s_xpulpv2(const int32_t * pSrc, int32_t * pDst, uint32_t bloc
   @return     none
 */
 
-void plp_negate_i16(const int16_t * pSrc, int16_t * pDst, uint32_t blockSize);
+void plp_negate_i16(const int16_t *pSrc, int16_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      negate the elements of a vector for 16-bit integers on RV32IM
@@ -2678,7 +2636,7 @@ void plp_negate_i16(const int16_t * pSrc, int16_t * pDst, uint32_t blockSize);
   @return     none
 */
 
-void plp_negate_i16s_rv32im(const int16_t * pSrc, int16_t * pDst, uint32_t blockSize);
+void plp_negate_i16s_rv32im(const int16_t *pSrc, int16_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      negate the elements of a vector for 16-bit integers on XpulpV2
@@ -2692,7 +2650,7 @@ void plp_negate_i16s_rv32im(const int16_t * pSrc, int16_t * pDst, uint32_t block
   performed on 32 bit vectors, with 32 bit accumulator.
 */
 
-void plp_negate_i16s_xpulpv2(const int16_t * pSrc, int16_t * pDst, uint32_t blockSize);
+void plp_negate_i16s_xpulpv2(const int16_t *pSrc, int16_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of negate the elements of a vector for 8-bit integers
@@ -2702,7 +2660,7 @@ void plp_negate_i16s_xpulpv2(const int16_t * pSrc, int16_t * pDst, uint32_t bloc
   @return     none
 */
 
-void plp_negate_i8(const int8_t * pSrc, int8_t * pDst, uint32_t blockSize);
+void plp_negate_i8(const int8_t *pSrc, int8_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      negate the elements of a vector for 8-bit integers on RV32IM
@@ -2712,7 +2670,7 @@ void plp_negate_i8(const int8_t * pSrc, int8_t * pDst, uint32_t blockSize);
   @return     none
 */
 
-void plp_negate_i8s_rv32im(const int8_t * pSrc, int8_t * pDst, uint32_t blockSize);
+void plp_negate_i8s_rv32im(const int8_t *pSrc, int8_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      negate the elements of a vector for 8-bit integers on XpulpV2
@@ -2726,7 +2684,7 @@ void plp_negate_i8s_rv32im(const int8_t * pSrc, int8_t * pDst, uint32_t blockSiz
   performed on 32 bit vectors, with 32 bit accumulator.
 */
 
-void plp_negate_i8s_xpulpv2(const int8_t * pSrc, int8_t * pDst, uint32_t blockSize);
+void plp_negate_i8s_xpulpv2(const int8_t *pSrc, int8_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief      Glue code of negate the elements of a vector for 32-bit floats
@@ -2736,7 +2694,7 @@ void plp_negate_i8s_xpulpv2(const int8_t * pSrc, int8_t * pDst, uint32_t blockSi
     @return     none
 */
 
-void plp_negate_f32(const float32_t * pSrc, float32_t * pDst, uint32_t blockSize);
+void plp_negate_f32(const float32_t *pSrc, float32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief      negate the elements of a vector for 32-bit floats on XpulpV2
@@ -2746,7 +2704,7 @@ void plp_negate_f32(const float32_t * pSrc, float32_t * pDst, uint32_t blockSize
     @return     none
 */
 
-void plp_negate_f32s_xpulpv2(const float32_t * pSrc, float32_t * pDst, uint32_t blockSize);
+void plp_negate_f32s_xpulpv2(const float32_t *pSrc, float32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of add a constant offset to a vector for 32-bit integers
@@ -2757,7 +2715,7 @@ void plp_negate_f32s_xpulpv2(const float32_t * pSrc, float32_t * pDst, uint32_t 
   @return     none
 */
 
-void plp_offset_i32(const int32_t * pSrc, int32_t offset, int32_t * pDst, uint32_t blockSize);
+void plp_offset_i32(const int32_t *pSrc, int32_t offset, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      add a constant offset to a vector for 32-bit integers on RV32IM
@@ -2768,7 +2726,7 @@ void plp_offset_i32(const int32_t * pSrc, int32_t offset, int32_t * pDst, uint32
   @return     none
 */
 
-void plp_offset_i32s_rv32im(const int32_t * pSrc, int32_t offset, int32_t * pDst, uint32_t blockSize);
+void plp_offset_i32s_rv32im(const int32_t *pSrc, int32_t offset, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      add a constant offset to a vector for 32-bit integers on XpulpV2
@@ -2779,7 +2737,10 @@ void plp_offset_i32s_rv32im(const int32_t * pSrc, int32_t offset, int32_t * pDst
   @return     none
 */
 
-void plp_offset_i32s_xpulpv2(const int32_t * pSrc, int32_t offset, int32_t * pDst, uint32_t blockSize);
+void plp_offset_i32s_xpulpv2(const int32_t *pSrc,
+                             int32_t offset,
+                             int32_t *pDst,
+                             uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of add a constant offset to a vector for 16-bit integers
@@ -2790,7 +2751,7 @@ void plp_offset_i32s_xpulpv2(const int32_t * pSrc, int32_t offset, int32_t * pDs
   @return     none
 */
 
-void plp_offset_i16(const int16_t * pSrc, int16_t offset, int16_t * pDst, uint32_t blockSize);
+void plp_offset_i16(const int16_t *pSrc, int16_t offset, int16_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      add a constant offset to a vector for 16-bit integers on RV32IM
@@ -2801,7 +2762,7 @@ void plp_offset_i16(const int16_t * pSrc, int16_t offset, int16_t * pDst, uint32
   @return     none
 */
 
-void plp_offset_i16s_rv32im(const int16_t * pSrc, int16_t offset, int16_t * pDst, uint32_t blockSize);
+void plp_offset_i16s_rv32im(const int16_t *pSrc, int16_t offset, int16_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      add a constant offset to a vector for 16-bit integers on XpulpV2
@@ -2816,7 +2777,10 @@ void plp_offset_i16s_rv32im(const int16_t * pSrc, int16_t offset, int16_t * pDst
   performed on 32 bit vectors, with 32 bit accumulator.
 */
 
-void plp_offset_i16s_xpulpv2(const int16_t * pSrc, int16_t offset, int16_t * pDst, uint32_t blockSize);
+void plp_offset_i16s_xpulpv2(const int16_t *pSrc,
+                             int16_t offset,
+                             int16_t *pDst,
+                             uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of add a constant offset to a vector for 8-bit integers
@@ -2827,7 +2791,7 @@ void plp_offset_i16s_xpulpv2(const int16_t * pSrc, int16_t offset, int16_t * pDs
   @return     none
 */
 
-void plp_offset_i8(const int8_t * pSrc, int8_t offset, int8_t * pDst, uint32_t blockSize);
+void plp_offset_i8(const int8_t *pSrc, int8_t offset, int8_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      add a constant offset to a vector for 8-bit integers on RV32IM
@@ -2838,7 +2802,7 @@ void plp_offset_i8(const int8_t * pSrc, int8_t offset, int8_t * pDst, uint32_t b
   @return     none
 */
 
-void plp_offset_i8s_rv32im(const int8_t * pSrc, int8_t offset, int8_t * pDst, uint32_t blockSize);
+void plp_offset_i8s_rv32im(const int8_t *pSrc, int8_t offset, int8_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      add a constant offset to a vector for 8-bit integers on XpulpV2
@@ -2853,7 +2817,7 @@ void plp_offset_i8s_rv32im(const int8_t * pSrc, int8_t offset, int8_t * pDst, ui
   performed on 32 bit vectors, with 32 bit accumulator.
 */
 
-void plp_offset_i8s_xpulpv2(const int8_t * pSrc, int8_t offset, int8_t * pDst, uint32_t blockSize);
+void plp_offset_i8s_xpulpv2(const int8_t *pSrc, int8_t offset, int8_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of add a constant offset to a vector for 32-bit floats
@@ -2864,7 +2828,7 @@ void plp_offset_i8s_xpulpv2(const int8_t * pSrc, int8_t offset, int8_t * pDst, u
   @return     none
 */
 
-void plp_offset_f32(const float32_t * pSrc, float32_t offset, float32_t * pDst, uint32_t blockSize);
+void plp_offset_f32(const float32_t *pSrc, float32_t offset, float32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      add a constant offset to a vector for 32-bit floats on XpulpV2
@@ -2875,7 +2839,10 @@ void plp_offset_f32(const float32_t * pSrc, float32_t offset, float32_t * pDst, 
   @return     none
 */
 
-void plp_offset_f32s_xpulpv2(const float32_t * pSrc, float32_t offset, float32_t * pDst, uint32_t blockSize);
+void plp_offset_f32s_xpulpv2(const float32_t *pSrc,
+                             float32_t offset,
+                             float32_t *pDst,
+                             uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of vector substraction for 32-bit integers
@@ -2886,7 +2853,7 @@ void plp_offset_f32s_xpulpv2(const float32_t * pSrc, float32_t offset, float32_t
   @return     none
 */
 
-void plp_sub_i32(const int32_t * pSrcA, const int32_t * pSrcB, int32_t * pDst, uint32_t blockSize);
+void plp_sub_i32(const int32_t *pSrcA, const int32_t *pSrcB, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      vector substraction for 32-bit integers on RV32IM
@@ -2897,7 +2864,10 @@ void plp_sub_i32(const int32_t * pSrcA, const int32_t * pSrcB, int32_t * pDst, u
   @return     none
 */
 
-void plp_sub_i32s_rv32im(const int32_t * pSrcA, const int32_t * pSrcB, int32_t * pDst, uint32_t blockSize);
+void plp_sub_i32s_rv32im(const int32_t *pSrcA,
+                         const int32_t *pSrcB,
+                         int32_t *pDst,
+                         uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      vector substraction for 32-bit integers on XpulpV2
@@ -2908,7 +2878,10 @@ void plp_sub_i32s_rv32im(const int32_t * pSrcA, const int32_t * pSrcB, int32_t *
   @return     none
 */
 
-void plp_sub_i32s_xpulpv2(const int32_t * pSrcA, const int32_t * pSrcB, int32_t * pDst, uint32_t blockSize);
+void plp_sub_i32s_xpulpv2(const int32_t *pSrcA,
+                          const int32_t *pSrcB,
+                          int32_t *pDst,
+                          uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of vector substraction for 16-bit integers
@@ -2919,7 +2892,7 @@ void plp_sub_i32s_xpulpv2(const int32_t * pSrcA, const int32_t * pSrcB, int32_t 
   @return     none
 */
 
-void plp_sub_i16(const int16_t * pSrcA, const int16_t * pSrcB, int32_t * pDst, uint32_t blockSize);
+void plp_sub_i16(const int16_t *pSrcA, const int16_t *pSrcB, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      vector substraction for 16-bit integers on RV32IM
@@ -2930,7 +2903,10 @@ void plp_sub_i16(const int16_t * pSrcA, const int16_t * pSrcB, int32_t * pDst, u
   @return     none
 */
 
-void plp_sub_i16s_rv32im(const int16_t * pSrcA, const int16_t * pSrcB, int32_t * pDst, uint32_t blockSize);
+void plp_sub_i16s_rv32im(const int16_t *pSrcA,
+                         const int16_t *pSrcB,
+                         int32_t *pDst,
+                         uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      vector substraction for 16-bit integers on XpulpV2
@@ -2945,7 +2921,10 @@ void plp_sub_i16s_rv32im(const int16_t * pSrcA, const int16_t * pSrcB, int32_t *
   performed on 32 bit vectors, with 32 bit accumulator.
 */
 
-void plp_sub_i16s_xpulpv2(const int16_t * pSrcA, const int16_t * pSrcB, int32_t * pDst, uint32_t blockSize);
+void plp_sub_i16s_xpulpv2(const int16_t *pSrcA,
+                          const int16_t *pSrcB,
+                          int32_t *pDst,
+                          uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of vector substraction for 8-bit integers
@@ -2956,7 +2935,7 @@ void plp_sub_i16s_xpulpv2(const int16_t * pSrcA, const int16_t * pSrcB, int32_t 
   @return     none
 */
 
-void plp_sub_i8(const int8_t * pSrcA, const int8_t * pSrcB, int32_t * pDst, uint32_t blockSize);
+void plp_sub_i8(const int8_t *pSrcA, const int8_t *pSrcB, int32_t *pDst, uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      vector substraction for 8-bit integers on RV32IM
@@ -2967,7 +2946,10 @@ void plp_sub_i8(const int8_t * pSrcA, const int8_t * pSrcB, int32_t * pDst, uint
   @return     none
 */
 
-void plp_sub_i8s_rv32im(const int8_t * pSrcA, const int8_t * pSrcB, int32_t * pDst, uint32_t blockSize);
+void plp_sub_i8s_rv32im(const int8_t *pSrcA,
+                        const int8_t *pSrcB,
+                        int32_t *pDst,
+                        uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      vector substraction for 8-bit integers on XpulpV2
@@ -2982,7 +2964,10 @@ void plp_sub_i8s_rv32im(const int8_t * pSrcA, const int8_t * pSrcB, int32_t * pD
   performed on 32 bit vectors, with 32 bit accumulator.
 */
 
-void plp_sub_i8s_xpulpv2(const int8_t * pSrcA, const int8_t * pSrcB, int32_t * pDst, uint32_t blockSize);
+void plp_sub_i8s_xpulpv2(const int8_t *pSrcA,
+                         const int8_t *pSrcB,
+                         int32_t *pDst,
+                         uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of vector substraction for 32-bit floats
@@ -2993,7 +2978,10 @@ void plp_sub_i8s_xpulpv2(const int8_t * pSrcA, const int8_t * pSrcB, int32_t * p
   @return     none
 */
 
-void plp_sub_f32(const float32_t * pSrcA, const float32_t * pSrcB, float32_t * pDst, uint32_t blockSize);
+void plp_sub_f32(const float32_t *pSrcA,
+                 const float32_t *pSrcB,
+                 float32_t *pDst,
+                 uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      vector substraction for 32-bit floats on XpulpV2
@@ -3004,7 +2992,10 @@ void plp_sub_f32(const float32_t * pSrcA, const float32_t * pSrcB, float32_t * p
   @return     none
 */
 
-void plp_sub_f32s_xpulpv2(const float32_t * pSrcA, const float32_t * pSrcB, float32_t * pDst, uint32_t blockSize);
+void plp_sub_f32s_xpulpv2(const float32_t *pSrcA,
+                          const float32_t *pSrcB,
+                          float32_t *pDst,
+                          uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of multiply a vector by a scalar for 32-bit integers
@@ -3016,7 +3007,11 @@ void plp_sub_f32s_xpulpv2(const float32_t * pSrcA, const float32_t * pSrcB, floa
   @return     none
 */
 
-void plp_scale_i32(const int32_t *__restrict__ pSrc, int32_t scaleFactor, int32_t shift, int32_t *__restrict__ pDst, uint32_t blockSize);
+void plp_scale_i32(const int32_t *__restrict__ pSrc,
+                   int32_t scaleFactor,
+                   int32_t shift,
+                   int32_t *__restrict__ pDst,
+                   uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      multiply a vector by a scalar for 32-bit integers on RV32IM
@@ -3028,7 +3023,11 @@ void plp_scale_i32(const int32_t *__restrict__ pSrc, int32_t scaleFactor, int32_
   @return     none
 */
 
-void plp_scale_i32s_rv32im(const int32_t *__restrict__ pSrc, int32_t scaleFactor, int32_t shift, int32_t *__restrict__ pDst, uint32_t blockSize);
+void plp_scale_i32s_rv32im(const int32_t *__restrict__ pSrc,
+                           int32_t scaleFactor,
+                           int32_t shift,
+                           int32_t *__restrict__ pDst,
+                           uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      multiply a vector by a scalar for 32-bit integers on XpulpV2
@@ -3040,7 +3039,11 @@ void plp_scale_i32s_rv32im(const int32_t *__restrict__ pSrc, int32_t scaleFactor
   @return     none
 */
 
-void plp_scale_i32s_xpulpv2(const int32_t *__restrict__ pSrc, int32_t scaleFactor, int32_t shift, int32_t *__restrict__ pDst, uint32_t blockSize);
+void plp_scale_i32s_xpulpv2(const int32_t *__restrict__ pSrc,
+                            int32_t scaleFactor,
+                            int32_t shift,
+                            int32_t *__restrict__ pDst,
+                            uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of multiply a vector by a scalar for 16-bit integers
@@ -3052,7 +3055,11 @@ void plp_scale_i32s_xpulpv2(const int32_t *__restrict__ pSrc, int32_t scaleFacto
   @return     none
 */
 
-void plp_scale_i16(const int16_t *__restrict__ pSrc, int16_t scaleFactor, int32_t shift, int16_t *__restrict__ pDst, uint32_t blockSize);
+void plp_scale_i16(const int16_t *__restrict__ pSrc,
+                   int16_t scaleFactor,
+                   int32_t shift,
+                   int16_t *__restrict__ pDst,
+                   uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      multiply a vector by a scalar for 16-bit integers on RV32IM
@@ -3064,7 +3071,11 @@ void plp_scale_i16(const int16_t *__restrict__ pSrc, int16_t scaleFactor, int32_
   @return     none
 */
 
-void plp_scale_i16s_rv32im(const int16_t *__restrict__ pSrc, int16_t scaleFactor, int32_t shift, int16_t *__restrict__ pDst, uint32_t blockSize);
+void plp_scale_i16s_rv32im(const int16_t *__restrict__ pSrc,
+                           int16_t scaleFactor,
+                           int32_t shift,
+                           int16_t *__restrict__ pDst,
+                           uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      multiply a vector by a scalar for 16-bit integers on XpulpV2
@@ -3080,7 +3091,11 @@ void plp_scale_i16s_rv32im(const int16_t *__restrict__ pSrc, int16_t scaleFactor
   performed on 32 bit vectors, with 32 bit accumulator.
 */
 
-void plp_scale_i16s_xpulpv2(const int16_t *__restrict__ pSrc, int16_t scaleFactor, int32_t shift, int16_t *__restrict__ pDst, uint32_t blockSize);
+void plp_scale_i16s_xpulpv2(const int16_t *__restrict__ pSrc,
+                            int16_t scaleFactor,
+                            int32_t shift,
+                            int16_t *__restrict__ pDst,
+                            uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of multiply a vector by a scalar for 8-bit integers
@@ -3092,7 +3107,11 @@ void plp_scale_i16s_xpulpv2(const int16_t *__restrict__ pSrc, int16_t scaleFacto
   @return     none
 */
 
-void plp_scale_i8(const int8_t *__restrict__ pSrc, int8_t scaleFactor, int32_t shift, int8_t *__restrict__ pDst, uint32_t blockSize);
+void plp_scale_i8(const int8_t *__restrict__ pSrc,
+                  int8_t scaleFactor,
+                  int32_t shift,
+                  int8_t *__restrict__ pDst,
+                  uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      multiply a vector by a scalar for 8-bit integers on RV32IM
@@ -3104,7 +3123,11 @@ void plp_scale_i8(const int8_t *__restrict__ pSrc, int8_t scaleFactor, int32_t s
   @return     none
 */
 
-void plp_scale_i8s_rv32im(const int8_t *__restrict__ pSrc, int8_t scaleFactor, int32_t shift, int8_t *__restrict__ pDst, uint32_t blockSize);
+void plp_scale_i8s_rv32im(const int8_t *__restrict__ pSrc,
+                          int8_t scaleFactor,
+                          int32_t shift,
+                          int8_t *__restrict__ pDst,
+                          uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      multiply a vector by a scalar for 8-bit integers on XpulpV2
@@ -3120,7 +3143,11 @@ void plp_scale_i8s_rv32im(const int8_t *__restrict__ pSrc, int8_t scaleFactor, i
   performed on 32 bit vectors, with 32 bit accumulator.
 */
 
-void plp_scale_i8s_xpulpv2(const int8_t *__restrict__ pSrc, int8_t scaleFactor, int32_t shift, int8_t *__restrict__ pDst, uint32_t blockSize);
+void plp_scale_i8s_xpulpv2(const int8_t *__restrict__ pSrc,
+                           int8_t scaleFactor,
+                           int32_t shift,
+                           int8_t *__restrict__ pDst,
+                           uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      Glue code of multiply a vector by a scalar for 32-bit floats
@@ -3131,7 +3158,10 @@ void plp_scale_i8s_xpulpv2(const int8_t *__restrict__ pSrc, int8_t scaleFactor, 
   @return     none
 */
 
-void plp_scale_f32(const float32_t *__restrict__ pSrc, float32_t scaleFactor, float32_t *__restrict__ pDst, uint32_t blockSize);
+void plp_scale_f32(const float32_t *__restrict__ pSrc,
+                   float32_t scaleFactor,
+                   float32_t *__restrict__ pDst,
+                   uint32_t blockSize);
 
 /** -------------------------------------------------------
   @brief      multiply a vector by a scalar for 32-bit floats on XpulpV2
@@ -3142,7 +3172,10 @@ void plp_scale_f32(const float32_t *__restrict__ pSrc, float32_t scaleFactor, fl
   @return     none
 */
 
-void plp_scale_f32s_xpulpv2(const float32_t *__restrict__ pSrc, float32_t scaleFactor, float32_t *__restrict__ pDst, uint32_t blockSize);
+void plp_scale_f32s_xpulpv2(const float32_t *__restrict__ pSrc,
+                            float32_t scaleFactor,
+                            float32_t *__restrict__ pDst,
+                            uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief      Glue code for filling a constant value into a 32-bit integer vector.
@@ -3239,8 +3272,8 @@ void plp_copy_f32s_xpulpv2(float32_t *__restrict__ pSrc,
 */
 
 void plp_copy_f32s_rv32im(float32_t *__restrict__ pSrc,
-                           float32_t *__restrict__ pDst,
-                           uint32_t blockSize);
+                          float32_t *__restrict__ pDst,
+                          uint32_t blockSize);
 
 /** -------------------------------------------------------
     @brief      Glue code for mean value of a 32-bit float vector.
@@ -3633,8 +3666,8 @@ void plp_power_f32(const float *__restrict__ pSrc, uint32_t blockSize, float *__
 */
 
 void plp_power_f32s_xpulpv2(const float *__restrict__ pSrc,
-                           uint32_t blockSize,
-                           float *__restrict__ pRes);
+                            uint32_t blockSize,
+                            float *__restrict__ pRes);
 
 /** -------------------------------------------------------
     @brief      Glue code for Sum of squares of a 32-bit integer vector.
@@ -3878,8 +3911,8 @@ void plp_var_f32(const float *__restrict__ pSrc, uint32_t blockSize, float *__re
 */
 
 void plp_var_f32s_xpulpv2(const float *__restrict__ pSrc,
-                         uint32_t blockSize,
-                         float *__restrict__ pRes);
+                          uint32_t blockSize,
+                          float *__restrict__ pRes);
 
 /** -------------------------------------------------------
     @brief      Glue code for Statisical variance of a 32-bit fixed point vector.
@@ -4017,8 +4050,8 @@ void plp_std_f32(const float *__restrict__ pSrc, uint32_t blockSize, float *__re
 */
 
 void plp_std_f32s_xpulpv2(const float *__restrict__ pSrc,
-                         uint32_t blockSize,
-                         float *__restrict__ pRes);
+                          uint32_t blockSize,
+                          float *__restrict__ pRes);
 
 /** -------------------------------------------------------
     @brief      Glue code for Statisical standard deviation of a 32-bit fixed point vector.
@@ -4157,8 +4190,8 @@ void plp_rms_f32(const float *__restrict__ pSrc, uint32_t blockSize, float *__re
 */
 
 void plp_rms_f32s_xpulpv2(const float *__restrict__ pSrc,
-                         uint32_t blockSize,
-                         float *__restrict__ pRes);
+                          uint32_t blockSize,
+                          float *__restrict__ pRes);
 
 /** -------------------------------------------------------
     @brief      Glue code for Statisical standard deviation of a 32-bit fixed point vector.
@@ -4345,7 +4378,6 @@ void plp_sqrt_q16s_xpulpv2(const int16_t *__restrict__ pSrc,
                            const uint32_t fracBits,
                            int16_t *__restrict__ pRes);
 
-
 /**
    @brief         Glue code for square root of a 32-bit floating point number.
    @param[in]     pSrc       points to the input vector
@@ -4353,9 +4385,7 @@ void plp_sqrt_q16s_xpulpv2(const int16_t *__restrict__ pSrc,
    @return        none
  */
 
-void plp_sqrt_f32(const float *__restrict__ pSrc, 
-                  float *__restrict__ pRes);
-
+void plp_sqrt_f32(const float *__restrict__ pSrc, float *__restrict__ pRes);
 
 /**
    @brief         Kernel for square root of a 32-bit floating point number.
@@ -4363,9 +4393,7 @@ void plp_sqrt_f32(const float *__restrict__ pSrc,
    @param[out]    pRes    Square root returned here
    @return        none
  */
-void plp_sqrt_f32s_xpulpv2(const float *__restrict__ pSrc,
-                           float *__restrict__ pRes);
-
+void plp_sqrt_f32s_xpulpv2(const float *__restrict__ pSrc, float *__restrict__ pRes);
 
 /**
    @brief         Glue code for square root of a 32-bit floating point number.
@@ -4373,7 +4401,6 @@ void plp_sqrt_f32s_xpulpv2(const float *__restrict__ pSrc,
    @param[out]    pRes    Square root returned here
    @return        none
  */
-
 
 /**
  * @brief Macros required for SINE and COSINE Fast math approximations
@@ -4717,7 +4744,6 @@ void plp_correlate_i8s_rv32im(const int8_t *pSrcA,
                               const uint32_t srcBLen,
                               int32_t *pRes);
 
-
 /** -------------------------------------------------------
     @brief Glue code for correlation of 32-bit integer vectors.
     @param[in]  pSrcA   points to the first input vector
@@ -4732,7 +4758,7 @@ void plp_correlate_q32(const int32_t *pSrcA,
                        const uint32_t srcALen,
                        const int32_t *pSrcB,
                        const uint32_t srcBLen,
-		       const uint32_t fracBits,
+                       const uint32_t fracBits,
                        int32_t *pRes);
 
 /** -------------------------------------------------------
@@ -4749,7 +4775,7 @@ void plp_correlate_q32s_rv32im(const int32_t *pSrcA,
                                const uint32_t srcALen,
                                const int32_t *pSrcB,
                                const uint32_t srcBLen,
-			       const uint32_t fracBits,
+                               const uint32_t fracBits,
                                int32_t *pRes);
 
 /** -------------------------------------------------------
@@ -4765,7 +4791,7 @@ void plp_correlate_q32s_xpulpv2(const int32_t *__restrict__ pSrcA,
                                 const uint32_t srcALen,
                                 const int32_t *__restrict__ pSrcB,
                                 const uint32_t srcBLen,
-				const uint32_t fracBits,
+                                const uint32_t fracBits,
                                 int32_t *__restrict__ pRes);
 
 /** -------------------------------------------------------
@@ -4782,7 +4808,7 @@ void plp_correlate_q16(const int16_t *pSrcA,
                        const uint32_t srcALen,
                        const int16_t *pSrcB,
                        const uint32_t srcBLen,
-		       const uint32_t fracBits,
+                       const uint32_t fracBits,
                        int32_t *pRes);
 
 /** -------------------------------------------------------
@@ -4799,7 +4825,7 @@ void plp_correlate_q16s_xpulpv2(const int16_t *pSrcA,
                                 const uint32_t srcALen,
                                 const int16_t *pSrcB,
                                 const uint32_t srcBLen,
-				const uint32_t fracBits,
+                                const uint32_t fracBits,
                                 int32_t *pRes);
 
 /** -------------------------------------------------------
@@ -4816,7 +4842,7 @@ void plp_correlate_q16s_rv32im(const int16_t *pSrcA,
                                const uint32_t srcALen,
                                const int16_t *pSrcB,
                                const uint32_t srcBLen,
-			       const uint32_t fracBits,
+                               const uint32_t fracBits,
                                int32_t *pRes);
 
 /** -------------------------------------------------------
@@ -4833,7 +4859,7 @@ void plp_correlate_q8(const int8_t *pSrcA,
                       const uint32_t srcALen,
                       const int8_t *pSrcB,
                       const uint32_t srcBLen,
-		      const uint32_t fracBits,
+                      const uint32_t fracBits,
                       int32_t *pRes);
 
 /** -------------------------------------------------------
@@ -4850,7 +4876,7 @@ void plp_correlate_valid_q8(const int8_t *pSrcA,
                             const uint32_t srcALen,
                             const int8_t *pSrcB,
                             const uint32_t srcBLen,
-			    const uint32_t fracBits,
+                            const uint32_t fracBits,
                             int32_t *pRes);
 
 /** -------------------------------------------------------
@@ -4867,7 +4893,7 @@ void plp_correlate_q8s_xpulpv2(const int8_t *pSrcA,
                                const uint32_t srcALen,
                                const int8_t *pSrcB,
                                const uint32_t srcBLen,
-			       const uint32_t fracBits,
+                               const uint32_t fracBits,
                                int32_t *pRes);
 
 /** -------------------------------------------------------
@@ -4884,9 +4910,8 @@ void plp_correlate_q8s_rv32im(const int8_t *pSrcA,
                               const uint32_t srcALen,
                               const int8_t *pSrcB,
                               const uint32_t srcBLen,
-			      const uint32_t fracBits,
+                              const uint32_t fracBits,
                               int32_t *pRes);
-
 
 /** -------------------------------------------------------
   @brief Glue code for convolution of 32-bit integer vectors.
@@ -8258,9 +8283,7 @@ void plp_mat_mult_trans_cmplx_q8p_xpulpv2(void *args);
  * @param[in]  numSamples  The number samples
  */
 
-void plp_cmplx_mag_f32(const float32_t *pSrc,
-                       float32_t *pRes,
-                       uint32_t numSamples);
+void plp_cmplx_mag_f32(const float32_t *pSrc, float32_t *pRes, uint32_t numSamples);
 
 /**
  * @brief      complex magnitude for float32 on XPULPV2
@@ -8270,9 +8293,7 @@ void plp_cmplx_mag_f32(const float32_t *pSrc,
  * @param[in]  numSamples  The number samples
  */
 
-void plp_cmplx_mag_f32s_xpulpv2(const float32_t *pSrc,
-                                float32_t *pRes,
-                                uint32_t numSamples);
+void plp_cmplx_mag_f32s_xpulpv2(const float32_t *pSrc, float32_t *pRes, uint32_t numSamples);
 
 /**
  * @brief      Glue code for complex magnitude calculation for 32 bit fixpoint
@@ -8326,9 +8347,9 @@ void plp_cmplx_mag_q32s_xpulpv2(const int32_t *pSrc,
  */
 
 void plp_cmplx_mag_q8(const int8_t *pSrc,
-                       const uint32_t fracBits,
-                       int8_t *pRes,
-                       uint32_t numSamples);
+                      const uint32_t fracBits,
+                      int8_t *pRes,
+                      uint32_t numSamples);
 
 /**
  * @brief      complex magnitude for q8 on RV32IM
@@ -8340,9 +8361,9 @@ void plp_cmplx_mag_q8(const int8_t *pSrc,
  */
 
 void plp_cmplx_mag_q8s_rv32im(const int8_t *pSrc,
-                               const uint32_t fracBits,
-                               int8_t *pRes,
-                               uint32_t numSamples);
+                              const uint32_t fracBits,
+                              int8_t *pRes,
+                              uint32_t numSamples);
 
 /**
  * @brief      complex magnitude for q8 on XPULPV2
@@ -8354,9 +8375,9 @@ void plp_cmplx_mag_q8s_rv32im(const int8_t *pSrc,
  */
 
 void plp_cmplx_mag_q8s_xpulpv2(const int8_t *pSrc,
-                                const uint32_t fracBits,
-                                int8_t *pRes,
-                                uint32_t numSamples);
+                               const uint32_t fracBits,
+                               int8_t *pRes,
+                               uint32_t numSamples);
 
 /**
  * @brief      Glue code for complex magnitude calculation in 16-bit integer
@@ -8366,9 +8387,7 @@ void plp_cmplx_mag_q8s_xpulpv2(const int8_t *pSrc,
  * @param[in]  numSamples  The number samples
  */
 
-void plp_cmplx_mag_i16(const int16_t *pSrc,
-                       int16_t *pRes,
-                       uint32_t numSamples);
+void plp_cmplx_mag_i16(const int16_t *pSrc, int16_t *pRes, uint32_t numSamples);
 
 /**
  * @brief      complex magnitude for i16 on RV32IM
@@ -8378,9 +8397,7 @@ void plp_cmplx_mag_i16(const int16_t *pSrc,
  * @param[in]  numSamples  The number samples
  */
 
-void plp_cmplx_mag_i16s_rv32im(const int16_t *pSrc,
-                               int16_t *pRes,
-                               uint32_t numSamples);
+void plp_cmplx_mag_i16s_rv32im(const int16_t *pSrc, int16_t *pRes, uint32_t numSamples);
 
 /**
  * @brief      complex magnitude for i16 on XPULPV2
@@ -8390,9 +8407,7 @@ void plp_cmplx_mag_i16s_rv32im(const int16_t *pSrc,
  * @param[in]  numSamples  The number samples
  */
 
-void plp_cmplx_mag_i16s_xpulpv2(const int16_t *pSrc,
-                                int16_t *pRes,
-                                uint32_t numSamples);
+void plp_cmplx_mag_i16s_xpulpv2(const int16_t *pSrc, int16_t *pRes, uint32_t numSamples);
 
 /**
  * @brief      Glue code for complex magnitude calculation in 32-bit integer
@@ -8402,9 +8417,7 @@ void plp_cmplx_mag_i16s_xpulpv2(const int16_t *pSrc,
  * @param[in]  numSamples  The number samples
  */
 
-void plp_cmplx_mag_i32(const int32_t *pSrc,
-                       int32_t *pRes,
-                       uint32_t numSamples);
+void plp_cmplx_mag_i32(const int32_t *pSrc, int32_t *pRes, uint32_t numSamples);
 
 /**
  * @brief      complex magnitude for i32 on RV32IM
@@ -8414,9 +8427,7 @@ void plp_cmplx_mag_i32(const int32_t *pSrc,
  * @param[in]  numSamples  The number samples
  */
 
-void plp_cmplx_mag_i32s_rv32im(const int32_t *pSrc,
-                               int32_t *pRes,
-                               uint32_t numSamples);
+void plp_cmplx_mag_i32s_rv32im(const int32_t *pSrc, int32_t *pRes, uint32_t numSamples);
 
 /**
  * @brief      complex magnitude for i32 on XPULPV2
@@ -8426,9 +8437,7 @@ void plp_cmplx_mag_i32s_rv32im(const int32_t *pSrc,
  * @param[in]  numSamples  The number samples
  */
 
-void plp_cmplx_mag_i32s_xpulpv2(const int32_t *pSrc,
-                                int32_t *pRes,
-                                uint32_t numSamples);
+void plp_cmplx_mag_i32s_xpulpv2(const int32_t *pSrc, int32_t *pRes, uint32_t numSamples);
 
 /**
  * @brief      Glue code for complex magnitude calculation in 8-bit integer
@@ -8438,9 +8447,7 @@ void plp_cmplx_mag_i32s_xpulpv2(const int32_t *pSrc,
  * @param[in]  numSamples  The number samples
  */
 
-void plp_cmplx_mag_i8(const int8_t *pSrc,
-                      int8_t *pRes,
-                      uint32_t numSamples);
+void plp_cmplx_mag_i8(const int8_t *pSrc, int8_t *pRes, uint32_t numSamples);
 
 /**
  * @brief      complex magnitude for i8 on RV32IM
@@ -8450,9 +8457,7 @@ void plp_cmplx_mag_i8(const int8_t *pSrc,
  * @param[in]  numSamples  The number samples
  */
 
-void plp_cmplx_mag_i8s_rv32im(const int8_t *pSrc,
-                              int8_t *pRes,
-                              uint32_t numSamples);
+void plp_cmplx_mag_i8s_rv32im(const int8_t *pSrc, int8_t *pRes, uint32_t numSamples);
 
 /**
  * @brief      complex magnitude for i8 on XPULPV2
@@ -8462,9 +8467,7 @@ void plp_cmplx_mag_i8s_rv32im(const int8_t *pSrc,
  * @param[in]  numSamples  The number samples
  */
 
-void plp_cmplx_mag_i8s_xpulpv2(const int8_t *pSrc,
-                               int8_t *pRes,
-                               uint32_t numSamples);
+void plp_cmplx_mag_i8s_xpulpv2(const int8_t *pSrc, int8_t *pRes, uint32_t numSamples);
 
 /**
  * @brief      Glue code for complex magnitude calculation in 16-bit quantized integer
@@ -8659,8 +8662,9 @@ void plp_cfft_q16p_xpulpv2(void *args);
   @return     none
 */
 
-void
-plp_bitreversal_32s_rv32im(uint32_t *pSrc, const uint16_t bitRevLen, const uint16_t *pBitRevTab);
+void plp_bitreversal_32s_rv32im(uint32_t *pSrc,
+                                const uint16_t bitRevLen,
+                                const uint16_t *pBitRevTab);
 
 /**
   @brief      In-place 32 bit reversal function for XPULPV2
@@ -8670,12 +8674,13 @@ plp_bitreversal_32s_rv32im(uint32_t *pSrc, const uint16_t bitRevLen, const uint1
   @return     none
 */
 
-void
-plp_bitreversal_32s_xpulpv2(uint32_t *pSrc, const uint16_t bitRevLen, const uint16_t *pBitRevTab);
+void plp_bitreversal_32s_xpulpv2(uint32_t *pSrc,
+                                 const uint16_t bitRevLen,
+                                 const uint16_t *pBitRevTab);
 
 /**
  * @brief      Glue code for quantized 32-bit complex fast fourier transform
- * 
+ *
  * Fixed point units input -> output dependent on length:
  * len=16:    Q1.31 -> Q5.27
  * len=32:    Q1.31 -> Q6.26
@@ -8688,7 +8693,8 @@ plp_bitreversal_32s_xpulpv2(uint32_t *pSrc, const uint16_t bitRevLen, const uint
  * len=4096:  Q1.31 -> Q13.19
  *
  * @param[in]  S               points to an instance of the 32bit quantized CFFT structure
- * @param      p1              points to the complex data buffer of size <code>2*fftLen</code>. Processing occurs in-place.
+ * @param      p1              points to the complex data buffer of size <code>2*fftLen</code>.
+ * Processing occurs in-place.
  * @param[in]  ifftFlag        flag that selects forwart (ifftFlag=0) or inverse (ifftFlag=1)
  * @param[in]  bitReverseFlag  flag that enables (bitReverseFlag=1) of disables
  * (bitReverseFlag=0) bit reversal of output.
@@ -8696,16 +8702,17 @@ plp_bitreversal_32s_xpulpv2(uint32_t *pSrc, const uint16_t bitRevLen, const uint
  */
 
 void plp_cfft_q32(const plp_cfft_instance_q32 *S,
-                      int32_t *p1,
-                      uint8_t ifftFlag,
-                      uint8_t bitReverseFlag,
-                      uint32_t fracBits);
+                  int32_t *p1,
+                  uint8_t ifftFlag,
+                  uint8_t bitReverseFlag,
+                  uint32_t fracBits);
 
 /**
  * @brief      Quantized 32-bit complex fast fourier transform for RV32IM
  *
  * @param[in]  S               points to an instance of the 32bit quantized CFFT structure
- * @param      p1              points to the complex data buffer of size <code>2*fftLen</code>. Processing occurs in-place.
+ * @param      p1              points to the complex data buffer of size <code>2*fftLen</code>.
+ * Processing occurs in-place.
  * @param[in]  ifftFlag        flag that selects forwart (ifftFlag=0) or inverse (ifftFlag=1)
  * @param[in]  bitReverseFlag  flag that enables (bitReverseFlag=1) of disables
  * (bitReverseFlag=0) bit reversal of output.
@@ -8713,16 +8720,17 @@ void plp_cfft_q32(const plp_cfft_instance_q32 *S,
  */
 
 void plp_cfft_q32s_rv32im(const plp_cfft_instance_q32 *S,
-                      int32_t *p1,
-                      uint8_t ifftFlag,
-                      uint8_t bitReverseFlag,
-                      uint32_t fracBits);
+                          int32_t *p1,
+                          uint8_t ifftFlag,
+                          uint8_t bitReverseFlag,
+                          uint32_t fracBits);
 
 /**
  * @brief      Quantized 32-bit complex fast fourier transform for XPULPV2
  *
  * @param[in]  S               points to an instance of the 32bit quantized CFFT structure
- * @param      p1              points to the complex data buffer of size <code>2*fftLen</code>. Processing occurs in-place.
+ * @param      p1              points to the complex data buffer of size <code>2*fftLen</code>.
+ * Processing occurs in-place.
  * @param[in]  ifftFlag        flag that selects forwart (ifftFlag=0) or inverse (ifftFlag=1)
  * @param[in]  bitReverseFlag  flag that enables (bitReverseFlag=1) of disables
  * (bitReverseFlag=0) bit reversal of output.
@@ -8730,10 +8738,10 @@ void plp_cfft_q32s_rv32im(const plp_cfft_instance_q32 *S,
  */
 
 void plp_cfft_q32s_xpulpv2(const plp_cfft_instance_q32 *S,
-                      int32_t *p1,
-                      uint8_t ifftFlag,
-                      uint8_t bitReverseFlag,
-                      uint32_t fracBits);
+                           int32_t *p1,
+                           uint8_t ifftFlag,
+                           uint8_t bitReverseFlag,
+                           uint32_t fracBits);
 
 /**
    @brief Floating-point FFT on real input data.
@@ -8784,9 +8792,7 @@ void plp_rfft_f32_xpulpv2_parallel(plp_fft_instance_f32_parallel *arg);
    @param[out]  pDst    points to the output buffer (complex data)
    @return      none
 */
-void plp_cfft_f32(const plp_fft_instance_f32 *S,
-                  const float32_t *pSrc,
-                  float32_t *pDst);
+void plp_cfft_f32(const plp_fft_instance_f32 *S, const float32_t *pSrc, float32_t *pDst);
 
 /**
    @brief Floating-point FFT on complex input data (parallel version).
@@ -8808,9 +8814,7 @@ void plp_cfft_f32_parallel(const plp_fft_instance_f32 *S,
    @param[out]  pDst    points to the output buffer (complex data)
    @return      none
 */
-void plp_cfft_f32_xpulpv2(const plp_fft_instance_f32 *S,
-                          const float32_t *pSrc,
-                          float32_t *pDst);
+void plp_cfft_f32_xpulpv2(const plp_fft_instance_f32 *S, const float32_t *pSrc, float32_t *pDst);
 
 /**
    @brief  Floating-point FFT on complex input data for XPULPV2 extension (parallel version).
@@ -8828,8 +8832,8 @@ void plp_cfft_f32_xpulpv2_parallel(plp_fft_instance_f32_parallel *arg);
    @param[in]   pShift  points to twiddle coefficient table of 4*FFTLength,
                         of which only the first quarter is necessary.
    @param[in]   pSrc    points to the input buffer (real data) of size
-                        FFTLength 
-   @param[out]  pBuf    points to buffer of size 2*FFTLength, used for 
+                        FFTLength
+   @param[out]  pBuf    points to buffer of size 2*FFTLength, used for
                         computation.
    @param[out]  pDst    points to output buffer (real data) of size FFTLength,
                         may be the same as pSrc.
@@ -8851,21 +8855,21 @@ void plp_dct2_f32(const plp_fft_instance_f32 *S,
    @param[in]   pShift  points to twiddle coefficient table of 4*FFTLength,
                         of which only the first quarter is necessary.
    @param[in]   pSrc    points to the input buffer (real data) of size
-                        FFTLength 
+                        FFTLength
    @param[in]   nPE     number of parallel processing units
-   @param[out]  pBuf    points to buffer of size 2*FFTLength, used for 
+   @param[out]  pBuf    points to buffer of size 2*FFTLength, used for
                         computation.
    @param[out]  pDst    points to output buffer (real data) of size FFTLength,
                         may be the same as pSrc.
    @return      none
 */
 void plp_dct2_f32_parallel(const plp_fft_instance_f32 *S,
-                  	   const Complex_type_f32 *pShift,
-                  	   const uint8_t orthoNorm,
-                  	   const float32_t *__restrict__ pSrc,
-			   const uint32_t nPE,
-                  	   float32_t *__restrict__ pBuf,
-                  	   float32_t *__restrict__ pDst);
+                           const Complex_type_f32 *pShift,
+                           const uint8_t orthoNorm,
+                           const float32_t *__restrict__ pSrc,
+                           const uint32_t nPE,
+                           float32_t *__restrict__ pBuf,
+                           float32_t *__restrict__ pDst);
 
 /**
    @brief MFCC on real input data.
@@ -8877,26 +8881,25 @@ void plp_dct2_f32_parallel(const plp_fft_instance_f32 *S,
                             bitReverseFlag should be on.
    @param[in]   pShift      points to twiddle coefficient table with
                             FFTLength = 4*n_mels. Only first quarter necessary.
-   @param[in]   filterBank  points to plp_triangular_filter_f32 instance with 
+   @param[in]   filterBank  points to plp_triangular_filter_f32 instance with
                             nFilters = n_mels.
    @param[in]   window      vector to use for windowing
    @param[in]   orthoNorm   whether to use dct orthonormalisation or not
    @param[in]   pSrc        points to the input buffer (real data, size n_fft)
-   @param[out]  pDst        points to the output buffer 
+   @param[out]  pDst        points to the output buffer
                             of length at least 3*n_fft.
                             pSrc and pDst must not overlap, the calculation can
-                            not be done in place. 
+                            not be done in place.
                             MFCCs are returned in the first n_mels spots.
    @return      none
 */
-
 
 void plp_mfcc_f32(const plp_fft_instance_f32 *SFFT,
                   const plp_fft_instance_f32 *SDCT,
                   const Complex_type_f32 *pShift,
                   const plp_triangular_filter_f32 *filterBank,
-		  const float32_t *window,
-		  const uint8_t *orthoNorm,
+                  const float32_t *window,
+                  const uint8_t *orthoNorm,
                   const float32_t *__restrict__ pSrc,
                   float32_t *__restrict__ pDst);
 
@@ -8910,30 +8913,29 @@ void plp_mfcc_f32(const plp_fft_instance_f32 *SFFT,
                             bitReverseFlag should be on.
    @param[in]   pShift      points to twiddle coefficient table with
                             FFTLength = 4*n_mels. Only first quarter necessary.
-   @param[in]   filterBank  points to plp_triangular_filter_f32 instance with 
+   @param[in]   filterBank  points to plp_triangular_filter_f32 instance with
                             nFilters = n_mels.
    @param[in]   window      vector to use for windowing
    @param[in]   orthoNorm   whether to use dct orthonormalisation or not
    @param[in]   pSrc        points to the input buffer (real data, size n_fft)
    @param[in]   nPE         number of parallel processing units
-   @param[out]  pDst        points to the output buffer 
+   @param[out]  pDst        points to the output buffer
                             of length at least 3*n_fft.
                             pSrc and pDst must not overlap, the calculation can
-                            not be done in place. 
+                            not be done in place.
                             MFCCs are returned in the first n_mels spots.
    @return      none
 */
 
-
 void plp_mfcc_f32_parallel(const plp_fft_instance_f32 *SFFT,
-                	   const plp_fft_instance_f32 *SDCT,
-                	   const Complex_type_f32 *pShift,
-                	   const plp_triangular_filter_f32 *filterBank,
-			   const float32_t *window,
-			   const uint8_t *orthoNorm,
-                	   const float32_t *__restrict__ pSrc,
-			   const uint32_t nPE,
-                	   float32_t *__restrict__ pDst);
+                           const plp_fft_instance_f32 *SDCT,
+                           const Complex_type_f32 *pShift,
+                           const plp_triangular_filter_f32 *filterBank,
+                           const float32_t *window,
+                           const uint8_t *orthoNorm,
+                           const float32_t *__restrict__ pSrc,
+                           const uint32_t nPE,
+                           float32_t *__restrict__ pDst);
 
 /** -------------------------------------------------------
   @brief      Glue code for matrix addition of a 32-bit integer matrices.
@@ -8944,7 +8946,6 @@ void plp_mfcc_f32_parallel(const plp_fft_instance_f32 *SFFT,
   @param[out] pDst    Points to the output matrix
   @return     none
 */
-
 
 /**
    @brief  Floating-point DWT on real input data for XPULPV2 extension.
@@ -8958,12 +8959,11 @@ void plp_mfcc_f32_parallel(const plp_fft_instance_f32 *SFFT,
    @return      none
 */
 void plp_dwt_f32(const float32_t *__restrict__ pSrc,
-                  uint32_t length,
-                  const plp_dwt_wavelet_f32 wavelet,
-                  plp_dwt_extension_mode mode,
-                  float32_t *__restrict__ pDstA,
-                  float32_t *__restrict__ pDstD);
-
+                 uint32_t length,
+                 const plp_dwt_wavelet_f32 wavelet,
+                 plp_dwt_extension_mode mode,
+                 float32_t *__restrict__ pDstA,
+                 float32_t *__restrict__ pDstD);
 
 /**
    @brief  32bit Fixed-point DWT  for XPULPV2 extension.
@@ -8977,12 +8977,11 @@ void plp_dwt_f32(const float32_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_q32(const int32_t *__restrict__ pSrc,
-                  uint32_t length,
-                  const plp_dwt_wavelet_q32 wavelet,
-                  plp_dwt_extension_mode mode,
-                  int32_t *__restrict__ pDstA,
-                  int32_t *__restrict__ pDstD);
-
+                 uint32_t length,
+                 const plp_dwt_wavelet_q32 wavelet,
+                 plp_dwt_extension_mode mode,
+                 int32_t *__restrict__ pDstA,
+                 int32_t *__restrict__ pDstD);
 
 /**
    @brief  16bit Fixed-point DWT for XPULPV2 extension.
@@ -8996,11 +8995,11 @@ void plp_dwt_q32(const int32_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_q16(const int16_t *__restrict__ pSrc,
-                  uint32_t length,
-                  const plp_dwt_wavelet_q16 wavelet,
-                  plp_dwt_extension_mode mode,
-                  int16_t *__restrict__ pDstA,
-                  int16_t *__restrict__ pDstD);
+                 uint32_t length,
+                 const plp_dwt_wavelet_q16 wavelet,
+                 plp_dwt_extension_mode mode,
+                 int16_t *__restrict__ pDstA,
+                 int16_t *__restrict__ pDstD);
 
 /**
    @brief  8bit Fixed-point DWT for XPULPV2 extension.
@@ -9014,12 +9013,11 @@ void plp_dwt_q16(const int16_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_q8(const int8_t *__restrict__ pSrc,
-                  uint32_t length,
-                  const plp_dwt_wavelet_q8 wavelet,
-                  plp_dwt_extension_mode mode,
-                  int8_t *__restrict__ pDstA,
-                  int8_t *__restrict__ pDstD);
-
+                uint32_t length,
+                const plp_dwt_wavelet_q8 wavelet,
+                plp_dwt_extension_mode mode,
+                int8_t *__restrict__ pDstA,
+                int8_t *__restrict__ pDstD);
 
 /**
    @brief  Floating-point n-level DWT for XPULPV2 extension.
@@ -9052,13 +9050,13 @@ void plp_dwt_dec_f32(const float32_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_dec_f32_parallel(const float32_t *__restrict__ pSrc,
-                     uint32_t length,
-                     const plp_dwt_wavelet_f32 wavelet,
-                     plp_dwt_extension_mode mode,
-                     uint32_t level,
-                     uint32_t nPE,
-                     float32_t *__restrict__ pTemp,
-                     float32_t *__restrict__ pDst);
+                              uint32_t length,
+                              const plp_dwt_wavelet_f32 wavelet,
+                              plp_dwt_extension_mode mode,
+                              uint32_t level,
+                              uint32_t nPE,
+                              float32_t *__restrict__ pTemp,
+                              float32_t *__restrict__ pDst);
 
 /**
    @brief  Floating-point DWT on real input data for XPULPV2 extension.
@@ -9072,14 +9070,15 @@ void plp_dwt_dec_f32_parallel(const float32_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_f32s_xpulpv2(const float32_t *__restrict__ pSrc,
-                  uint32_t length,
-                  const plp_dwt_wavelet_f32 wavelet,
-                  plp_dwt_extension_mode mode,
-                  float32_t *__restrict__ pDstA,
-                  float32_t *__restrict__ pDstD);
+                          uint32_t length,
+                          const plp_dwt_wavelet_f32 wavelet,
+                          plp_dwt_extension_mode mode,
+                          float32_t *__restrict__ pDstA,
+                          float32_t *__restrict__ pDstD);
 
 /**
-   @brief  Floating-point DWT kernel optimized for Haar Wavelet on real input data for XPULPV2 extension.
+   @brief  Floating-point DWT kernel optimized for Haar Wavelet on real input data for XPULPV2
+   extension.
    @param[in]   pSrc     points to the input buffer (real data)
    @param[in]   length   length of input buffer
    @param[in]   mode     boundary extension mode
@@ -9089,13 +9088,10 @@ void plp_dwt_f32s_xpulpv2(const float32_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_haar_f32s_xpulpv2(const float32_t *__restrict__ pSrc,
-                         uint32_t length,
-                         plp_dwt_extension_mode mode,
-                         float32_t *__restrict__ pDstA,
-                         float32_t *__restrict__ pDstD);
-
-
-
+                               uint32_t length,
+                               plp_dwt_extension_mode mode,
+                               float32_t *__restrict__ pDstA,
+                               float32_t *__restrict__ pDstD);
 
 /**
    @brief  32bit Fixed-point DWT for XPULPV2 extension.
@@ -9109,14 +9105,15 @@ void plp_dwt_haar_f32s_xpulpv2(const float32_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_q32s_xpulpv2(const int32_t *__restrict__ pSrc,
-                  uint32_t length,
-                  const plp_dwt_wavelet_q32 wavelet,
-                  plp_dwt_extension_mode mode,
-                  int32_t *__restrict__ pDstA,
-                  int32_t *__restrict__ pDstD);
+                          uint32_t length,
+                          const plp_dwt_wavelet_q32 wavelet,
+                          plp_dwt_extension_mode mode,
+                          int32_t *__restrict__ pDstA,
+                          int32_t *__restrict__ pDstD);
 
 /**
-   @brief  32bit Fixed-point DWT  kernel optimized for Haar Wavelet on real input data for XPULPV2 extension.
+   @brief  32bit Fixed-point DWT  kernel optimized for Haar Wavelet on real input data for XPULPV2
+   extension.
    @param[in]   pSrc     points to the input buffer (real data)
    @param[in]   length   length of input buffer
    @param[in]   mode     boundary extension mode
@@ -9126,12 +9123,10 @@ void plp_dwt_q32s_xpulpv2(const int32_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_haar_q32s_xpulpv2(const int32_t *__restrict__ pSrc,
-                         uint32_t length,
-                         plp_dwt_extension_mode mode,
-                         int32_t *__restrict__ pDstA,
-                         int32_t *__restrict__ pDstD);
-
-
+                               uint32_t length,
+                               plp_dwt_extension_mode mode,
+                               int32_t *__restrict__ pDstA,
+                               int32_t *__restrict__ pDstD);
 
 /**
    @brief  16bit Fixed-point DWT for XPULPV2 extension.
@@ -9145,14 +9140,15 @@ void plp_dwt_haar_q32s_xpulpv2(const int32_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_q16s_xpulpv2(const int16_t *__restrict__ pSrc,
-                  uint32_t length,
-                  const plp_dwt_wavelet_q16 wavelet,
-                  plp_dwt_extension_mode mode,
-                  int16_t *__restrict__ pDstA,
-                  int16_t *__restrict__ pDstD);
+                          uint32_t length,
+                          const plp_dwt_wavelet_q16 wavelet,
+                          plp_dwt_extension_mode mode,
+                          int16_t *__restrict__ pDstA,
+                          int16_t *__restrict__ pDstD);
 
 /**
-   @brief  16bit Fixed-point DWT kernel optimized for Haar Wavelet on real input data for XPULPV2 extension.
+   @brief  16bit Fixed-point DWT kernel optimized for Haar Wavelet on real input data for XPULPV2
+   extension.
    @param[in]   pSrc     points to the input buffer (real data)
    @param[in]   length   length of input buffer
    @param[in]   mode     boundary extension mode
@@ -9162,11 +9158,10 @@ void plp_dwt_q16s_xpulpv2(const int16_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_haar_q16s_xpulpv2(const int16_t *__restrict__ pSrc,
-                         uint32_t length,
-                         plp_dwt_extension_mode mode,
-                         int16_t *__restrict__ pDstA,
-                         int16_t *__restrict__ pDstD);
-
+                               uint32_t length,
+                               plp_dwt_extension_mode mode,
+                               int16_t *__restrict__ pDstA,
+                               int16_t *__restrict__ pDstD);
 
 /**
    @brief  8bit Fixed-point DWT for XPULPV2 extension.
@@ -9180,14 +9175,15 @@ void plp_dwt_haar_q16s_xpulpv2(const int16_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_q8s_xpulpv2(const int8_t *__restrict__ pSrc,
-                  uint32_t length,
-                  const plp_dwt_wavelet_q8 wavelet,
-                  plp_dwt_extension_mode mode,
-                  int8_t *__restrict__ pDstA,
-                  int8_t *__restrict__ pDstD);
+                         uint32_t length,
+                         const plp_dwt_wavelet_q8 wavelet,
+                         plp_dwt_extension_mode mode,
+                         int8_t *__restrict__ pDstA,
+                         int8_t *__restrict__ pDstD);
 
 /**
-   @brief  8bit Fixed-point DWT kernel optimized for Haar Wavelet on real input data for XPULPV2 extension.
+   @brief  8bit Fixed-point DWT kernel optimized for Haar Wavelet on real input data for XPULPV2
+   extension.
    @param[in]   pSrc     points to the input buffer (real data)
    @param[in]   length   length of input buffer
    @param[in]   mode     boundary extension mode
@@ -9197,11 +9193,10 @@ void plp_dwt_q8s_xpulpv2(const int8_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_haar_q8s_xpulpv2(const int8_t *__restrict__ pSrc,
-                         uint32_t length,
-                         plp_dwt_extension_mode mode,
-                         int8_t *__restrict__ pDstA,
-                         int8_t *__restrict__ pDstD);
-
+                              uint32_t length,
+                              plp_dwt_extension_mode mode,
+                              int8_t *__restrict__ pDstA,
+                              int8_t *__restrict__ pDstD);
 
 /**
    @brief  Parallel Floating-point DWT on real input data for XPULPV2 extension.
@@ -9216,13 +9211,12 @@ void plp_dwt_haar_q8s_xpulpv2(const int8_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_f32_parallel(const float32_t *__restrict__ pSrc,
-                 uint32_t length,
-                 const plp_dwt_wavelet_f32 wavelet,
-                 plp_dwt_extension_mode mode,
-                 uint32_t nPE,
-                 float32_t *__restrict__ pDstA,
-                 float32_t *__restrict__ pDstD);
-
+                          uint32_t length,
+                          const plp_dwt_wavelet_f32 wavelet,
+                          plp_dwt_extension_mode mode,
+                          uint32_t nPE,
+                          float32_t *__restrict__ pDstA,
+                          float32_t *__restrict__ pDstD);
 
 /**
    @brief  8bit Parallel Fixed-point DWT on real input data for XPULPV2 extension.
@@ -9237,13 +9231,12 @@ void plp_dwt_f32_parallel(const float32_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_q8_parallel(const int8_t *__restrict__ pSrc,
-                 uint32_t length,
-                 const plp_dwt_wavelet_q8 wavelet,
-                 plp_dwt_extension_mode mode,
-                 uint32_t nPE,
-                 int8_t *__restrict__ pDstA,
-                 int8_t *__restrict__ pDstD);
-
+                         uint32_t length,
+                         const plp_dwt_wavelet_q8 wavelet,
+                         plp_dwt_extension_mode mode,
+                         uint32_t nPE,
+                         int8_t *__restrict__ pDstA,
+                         int8_t *__restrict__ pDstD);
 
 /**
    @brief  16bit Parallel Fixed-point DWT on real input data for XPULPV2 extension.
@@ -9258,12 +9251,12 @@ void plp_dwt_q8_parallel(const int8_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_q16_parallel(const int16_t *__restrict__ pSrc,
-                 uint32_t length,
-                 const plp_dwt_wavelet_q16 wavelet,
-                 plp_dwt_extension_mode mode,
-                 uint32_t nPE,
-                 int16_t *__restrict__ pDstA,
-                 int16_t *__restrict__ pDstD);
+                          uint32_t length,
+                          const plp_dwt_wavelet_q16 wavelet,
+                          plp_dwt_extension_mode mode,
+                          uint32_t nPE,
+                          int16_t *__restrict__ pDstA,
+                          int16_t *__restrict__ pDstD);
 
 /**
    @brief  32bit Parallel Fixed-point DWT on real input data for XPULPV2 extension.
@@ -9278,13 +9271,12 @@ void plp_dwt_q16_parallel(const int16_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_q32_parallel(const int32_t *__restrict__ pSrc,
-                 uint32_t length,
-                 const plp_dwt_wavelet_q32 wavelet,
-                 plp_dwt_extension_mode mode,
-                 uint32_t nPE,
-                 int32_t *__restrict__ pDstA,
-                 int32_t *__restrict__ pDstD);
-
+                          uint32_t length,
+                          const plp_dwt_wavelet_q32 wavelet,
+                          plp_dwt_extension_mode mode,
+                          uint32_t nPE,
+                          int32_t *__restrict__ pDstA,
+                          int32_t *__restrict__ pDstD);
 
 /**
    @brief  Floating-point DWT on real input data for XPULPV2 extension.
@@ -9293,14 +9285,13 @@ void plp_dwt_q32_parallel(const int32_t *__restrict__ pSrc,
 */
 void plp_dwt_f32p_xpulpv2(void *args);
 
-
 /**
-   @brief  Floating-point DWT kernel optimized for Haar Wavelet on real input data for XPULPV2 extension.
+   @brief  Floating-point DWT kernel optimized for Haar Wavelet on real input data for XPULPV2
+   extension.
    @param[in]   args     points to the plp_dwt_instance_f32
    @return      none
 */
 void plp_dwt_haar_f32p_xpulpv2(void *args);
-
 
 /**
    @brief  Q7 fixed-point DWT for XPULPV2 extension.
@@ -9309,8 +9300,6 @@ void plp_dwt_haar_f32p_xpulpv2(void *args);
 */
 void plp_dwt_q8p_xpulpv2(void *args);
 
-
-
 /**
    @brief q7 fixed-point DWT kernel optimized for Haar Wavelet for XPULPV2 extension.
    @param[in]   args     points to the plp_dwt_instance_q8
@@ -9318,15 +9307,12 @@ void plp_dwt_q8p_xpulpv2(void *args);
 */
 void plp_dwt_haar_q8p_xpulpv2(void *args);
 
-
-
 /**
    @brief  Q15 fixed-point DWT for XPULPV2 extension.
    @param[in]   args     points to the plp_dwt_instance_q16
    @return      none
 */
 void plp_dwt_q16p_xpulpv2(void *args);
-
 
 /**
    @brief q15 fixed-point DWT kernel optimized for Haar Wavelet for XPULPV2 extension.
@@ -9349,10 +9335,6 @@ void plp_dwt_q32p_xpulpv2(void *arg);
 */
 void plp_dwt_haar_q32p_xpulpv2(void *args);
 
-
-
-
-
 /**
    @brief  32bit Fixed-point DWT.
    @param[in]   pSrc     points to the input buffer (real data)
@@ -9365,11 +9347,11 @@ void plp_dwt_haar_q32p_xpulpv2(void *args);
    @return      none
 */
 void plp_dwt_q32s_rv32im(const int32_t *__restrict__ pSrc,
-                  uint32_t length,
-                  const plp_dwt_wavelet_q32 wavelet,
-                  plp_dwt_extension_mode mode,
-                  int32_t *__restrict__ pDstA,
-                  int32_t *__restrict__ pDstD);
+                         uint32_t length,
+                         const plp_dwt_wavelet_q32 wavelet,
+                         plp_dwt_extension_mode mode,
+                         int32_t *__restrict__ pDstA,
+                         int32_t *__restrict__ pDstD);
 
 /**
    @brief  32bit Fixed-point DWT  kernel optimized for Haar Wavelet on real input data.
@@ -9382,12 +9364,10 @@ void plp_dwt_q32s_rv32im(const int32_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_haar_q32s_rv32im(const int32_t *__restrict__ pSrc,
-                         uint32_t length,
-                         plp_dwt_extension_mode mode,
-                         int32_t *__restrict__ pDstA,
-                         int32_t *__restrict__ pDstD);
-
-
+                              uint32_t length,
+                              plp_dwt_extension_mode mode,
+                              int32_t *__restrict__ pDstA,
+                              int32_t *__restrict__ pDstD);
 
 /**
    @brief  16bit Fixed-point DWT.
@@ -9401,11 +9381,11 @@ void plp_dwt_haar_q32s_rv32im(const int32_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_q16s_rv32im(const int16_t *__restrict__ pSrc,
-                  uint32_t length,
-                  const plp_dwt_wavelet_q16 wavelet,
-                  plp_dwt_extension_mode mode,
-                  int16_t *__restrict__ pDstA,
-                  int16_t *__restrict__ pDstD);
+                         uint32_t length,
+                         const plp_dwt_wavelet_q16 wavelet,
+                         plp_dwt_extension_mode mode,
+                         int16_t *__restrict__ pDstA,
+                         int16_t *__restrict__ pDstD);
 
 /**
    @brief  16bit Fixed-point DWT kernel optimized for Haar Wavelet on real input data.
@@ -9418,11 +9398,10 @@ void plp_dwt_q16s_rv32im(const int16_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_haar_q16s_rv32im(const int16_t *__restrict__ pSrc,
-                         uint32_t length,
-                         plp_dwt_extension_mode mode,
-                         int16_t *__restrict__ pDstA,
-                         int16_t *__restrict__ pDstD);
-
+                              uint32_t length,
+                              plp_dwt_extension_mode mode,
+                              int16_t *__restrict__ pDstA,
+                              int16_t *__restrict__ pDstD);
 
 /**
    @brief  8bit Fixed-point DWT.
@@ -9436,11 +9415,11 @@ void plp_dwt_haar_q16s_rv32im(const int16_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_q8s_rv32im(const int8_t *__restrict__ pSrc,
-                  uint32_t length,
-                  const plp_dwt_wavelet_q8 wavelet,
-                  plp_dwt_extension_mode mode,
-                  int8_t *__restrict__ pDstA,
-                  int8_t *__restrict__ pDstD);
+                        uint32_t length,
+                        const plp_dwt_wavelet_q8 wavelet,
+                        plp_dwt_extension_mode mode,
+                        int8_t *__restrict__ pDstA,
+                        int8_t *__restrict__ pDstD);
 
 /**
    @brief  8bit Fixed-point DWT kernel optimized for Haar Wavelet on real input data.
@@ -9453,11 +9432,10 @@ void plp_dwt_q8s_rv32im(const int8_t *__restrict__ pSrc,
    @return      none
 */
 void plp_dwt_haar_q8s_rv32im(const int8_t *__restrict__ pSrc,
-                         uint32_t length,
-                         plp_dwt_extension_mode mode,
-                         int8_t *__restrict__ pDstA,
-                         int8_t *__restrict__ pDstD);
-
+                             uint32_t length,
+                             plp_dwt_extension_mode mode,
+                             int8_t *__restrict__ pDstA,
+                             int8_t *__restrict__ pDstD);
 
 void plp_mat_add_i32(const int32_t *__restrict__ pSrcA,
                      const int32_t *__restrict__ pSrcB,
@@ -17602,8 +17580,8 @@ void plp_cmplx_mag_squared_i32_rv32im(const int32_t *__restrict__ pSrc,
  */
 
 void plp_cmplx_mag_squared_i32_xpulpv2(const int32_t *__restrict__ pSrc,
-                                      int32_t *__restrict__ pDst,
-                                      uint32_t numSamples);
+                                       int32_t *__restrict__ pDst,
+                                       uint32_t numSamples);
 
 /**
   @brief         8 bit Integer complex squared magnitude.

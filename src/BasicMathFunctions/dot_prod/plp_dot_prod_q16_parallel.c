@@ -69,7 +69,7 @@ void plp_dot_prod_q16_parallel(const int16_t *__restrict__ pSrcA,
 
         uint32_t i, tmpblkSizePE = blockSize / nPE;
         int32_t resBuffer[hal_cl_nb_pe_cores()];
-        
+
         plp_dot_prod_instance_q16 S;
 
         // Initialize the plp_dot_prod_instance
