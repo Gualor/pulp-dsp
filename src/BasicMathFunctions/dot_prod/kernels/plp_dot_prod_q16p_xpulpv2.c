@@ -95,7 +95,7 @@ void plp_dot_prod_q16p_xpulpv2(void *S) {
     do {
         sum += __ROUNDNORM_REG((*(pSrcA + blkOffset + i)) * (*(pSrcB + blkOffset + i)), deciPoint);
         i++;
-    } while (i < blkSizePE)
+    } while (i < blkSizePE);
 
 #endif // PLP_MATH_LOOPUNROLL
 

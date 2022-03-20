@@ -93,7 +93,7 @@ void plp_dot_prod_i16p_xpulpv2(void *S) {
     do {
         sum1 = __MAC(sum1, *(pSrcA + blkOffset + i), *(pSrcB + blkOffset + i));
         i++;
-    } while (i < blkSizePE)
+    } while (i < blkSizePE);
 
 #endif // PLP_MATH_LOOPUNROLL
 
