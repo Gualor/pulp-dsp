@@ -423,6 +423,6 @@ HAL_CL_L1 int32_t res_i16 = -49346;
 /* The true res_q16 is computed using floating point operations,
  * all q16 dotprod functions will approximate this value. */
 HAL_CL_L1 float32_t res_q16 = -3084.125;
-HAL_CL_L1 float32_t res_f16 = 47740.0;
+HAL_CL_L1 float32_t res_f16 = 47738.977;
 
 #endif /* DATA_H */

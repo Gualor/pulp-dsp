@@ -63,33 +63,39 @@ void plp_dot_prod_q16p_xpulpv2(void *S) {
     uint32_t nPE = args->nPE;
     int32_t *resBufferPE = &(args->resBuffer[core_id]);
 
-    uint32_t blkIdx;
-    uint32_t coreOffset = blkSizePE * core_id;
+    uint32_t blkOffset = blkSizePE * core_id;
     int32_t sum = 0;
 
 #if defined(PLP_MATH_LOOPUNROLL)
 
-    uint32_t blkSize4 = blkSizePE & 0xFFFFFFFC; // Make it divisible by 4
-    for (blkIdx = coreOffset; blkIdx < coreOffset + blkSize4; blkIdx += 4) {
-        v2s a0 = *((v2s *)((void *)(pSrcA + blkIdx)));
-        v2s b0 = *((v2s *)((void *)(pSrcB + blkIdx)));
-        v2s a1 = *((v2s *)((void *)(pSrcA + blkIdx + 2)));
-        v2s b1 = *((v2s *)((void *)(pSrcB + blkIdx + 2)));
+    uint32_t blkCnt = blkSizePE >> 2;
+    int i = 0;
+    do {
+        v2s a0 = *((v2s *)((void *)(pSrcA + blkOffset + i * 4)));
+        v2s b0 = *((v2s *)((void *)(pSrcB + blkOffset + i * 4)));
+        v2s a1 = *((v2s *)((void *)(pSrcA + blkOffset + i * 4 + 2)));
+        v2s b1 = *((v2s *)((void *)(pSrcB + blkOffset + i * 4 + 2)));
+        asm volatile("" ::: "memory");
         int32_t x0 = __DOTP2(a0, b0);
         int32_t x1 = __DOTP2(a1, b1);
         sum += __ADDROUNDNORM_REG(x0, x1, deciPoint);
-    }
-    uint32_t remBS = blkSizePE % 4U;
-    uint32_t remIdx = blkIdx;
-    for (remIdx; remIdx < blkIdx + remBS; remIdx++) {
-        sum += __ROUNDNORM_REG(pSrcA[remIdx] * pSrcB[remIdx], deciPoint);
+        i++;
+    } while (i < blkCnt);
+
+    uint32_t blkRem = blkSizePE % 4U;
+    blkOffset += blkCnt * 4;
+    i = 0;
+    for (i = 0; i < blkRem; i++) {
+        sum += __ROUNDNORM_REG((*(pSrcA + blkOffset + i)) * (*(pSrcB + blkOffset + i)), deciPoint);
     }
 
 #else // PLP_MATH_LOOPUNROLL
 
-    for (blkIdx = coreOffset; blkIdx < coreOffset + blkSizePE; blkIdx++) {
-        sum += __ROUNDNORM_REG(pSrcA[blkIdx] * pSrcB[blkIdx], deciPoint);
-    }
+    int i = 0;
+    do {
+        sum += __ROUNDNORM_REG((*(pSrcA + blkOffset + i)) * (*(pSrcB + blkOffset + i)), deciPoint);
+        i++;
+    } while (i < blkSizePE)
 
 #endif // PLP_MATH_LOOPUNROLL
 

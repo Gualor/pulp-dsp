@@ -64,26 +64,31 @@ void plp_dot_prod_f16p_xpulpv2(void *S) {
     uint32_t nPE = args->nPE;
     float32_t *resBufferPE = &(args->resBuffer[core_id]);
 
-    uint32_t blkIdx;
-    uint32_t coreOffset = blkSizePE * core_id;
-    float16_t sum = 0;
+    uint32_t blkOffset = blkSizePE * core_id;
+    float32_t sum = 0;
 
 #if defined(PLP_MATH_LOOPUNROLL)
 
-    uint32_t blkSize2 = blkSizePE & 0xFFFFFFFE; // Make it divisible by 2
-    for (blkIdx = coreOffset; blkIdx < coreOffset + blkSize2; blkIdx += 2) {
-        sum = MAC(sum, pSrcA[blkIdx], pSrcB[blkIdx]);
-        sum = MAC(sum, pSrcA[blkIdx + 1], pSrcB[blkIdx + 1]);
-    }
+    uint32_t blkCnt = blkSizePE >> 1;
+    int i = 0;
+    do {
+        sum = MAC(sum, *(pSrcA + blkOffset + i * 2), *(pSrcB + blkOffset + i * 2));
+        sum = MAC(sum, *(pSrcA + blkOffset + i * 2 + 1), *(pSrcB + blkOffset + i * 2 + 1));
+        i++;
+    } while (i < blkCnt);
+
+    blkOffset += blkCnt * 2;
     if (blkSizePE & 1U) {
-        sum = MAC(sum, pSrcA[blkIdx], pSrcB[blkIdx]);
+        sum = MAC(sum, *(pSrcA + blkOffset), *(pSrcB + blkOffset));
     }
 
 #else // PLP_MATH_LOOPUNROLL
 
-    for (blkIdx = coreOffset; blkIdx < coreOffset + blkSizePE; blkIdx++) {
-        sum = MAC(sum, pSrcA[blkIdx], pSrcB[blkIdx]);
-    }
+    int i = 0;
+    do {
+        sum1 = MAC(sum1, *(pSrcA + blkOffset + i), *(pSrcB + blkOffset + i));
+        i++;
+    } while (i < blkSizePE)
 
 #endif // PLP_MATH_LOOPUNROLL
 
