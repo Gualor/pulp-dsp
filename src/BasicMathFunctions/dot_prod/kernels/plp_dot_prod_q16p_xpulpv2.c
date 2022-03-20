@@ -3,7 +3,7 @@
  * Title:        plp_dot_prod_q16p_xpulpv2.c
  * Description:  16-bit fixed point scalar dot product for XPULPV2 with interleaved access
  *
- * $Date:        19. Mar 2022
+ * $Date:        20. Mar 2022
  * $Revision:    V0
  *
  * Target Processor: PULP cores
@@ -48,7 +48,7 @@
   @brief Parallel dot product with interleaved access of 16-bit fixed point vectors kernel for
   XPULPV2 extension.
   @param[in]  S     points to the instance structure for fixed point parallel dot product
-  @return        none
+  @return           none
  */
 
 void plp_dot_prod_q16p_xpulpv2(void *S) {
@@ -63,7 +63,7 @@ void plp_dot_prod_q16p_xpulpv2(void *S) {
     uint32_t nPE = args->nPE;
     int32_t *resBufferPE = &(args->resBuffer[core_id]);
 
-    uint32_t blkIdx, remBS;
+    uint32_t blkIdx;
     uint32_t coreOffset = blkSizePE * core_id;
     int32_t sum = 0;
 
@@ -79,8 +79,9 @@ void plp_dot_prod_q16p_xpulpv2(void *S) {
         int32_t x1 = __DOTP2(a1, b1);
         sum += __ADDROUNDNORM_REG(x0, x1, deciPoint);
     }
-    remBS = blkSizePE % 4U;
-    for (uint32_t remIdx = blkIdx; remIdx < blkIdx + remBS; remIdx++) {
+    uint32_t remBS = blkSizePE % 4U;
+    uint32_t remIdx = blkIdx;
+    for (remIdx; remIdx < blkIdx + remBS; remIdx++) {
         sum += __ROUNDNORM_REG(pSrcA[remIdx] * pSrcB[remIdx], deciPoint);
     }
 

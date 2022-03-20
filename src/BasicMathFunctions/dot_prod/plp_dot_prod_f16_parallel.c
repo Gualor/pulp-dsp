@@ -3,7 +3,7 @@
  * Title:        plp_dot_prod_f16_parallel.c
  * Description:  16-bit float parallel dot product glue code
  *
- * $Date:        19. Mar 2022
+ * $Date:        20. Mar 2022
  * $Revision:    V0
  *
  * Target Processor: PULP cores
@@ -50,8 +50,8 @@
   @param[in]  pSrcB      points to the second input vector
   @param[in]  blockSize  number of samples in each vector
   @param[in]  nPE        number of parallel processing units
-  @param[out] pRes     output result returned here
-  @return        none
+  @param[out] pRes       output result returned here
+  @return                none
  */
 
 void plp_dot_prod_f16_parallel(const float16_t *__restrict__ pSrcA,
