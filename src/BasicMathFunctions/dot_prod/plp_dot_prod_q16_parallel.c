@@ -84,7 +84,7 @@ void plp_dot_prod_q16_parallel(const int16_t *__restrict__ pSrcA,
         hal_cl_team_fork(nPE, plp_dot_prod_q16p_xpulpv2, (void *)&S);
 
         int i;
-        int16_t sum = 0;
+        int32_t sum = 0;
         for (i = 0; i < nPE; i++) {
             sum += resBuffer[i];
         }
