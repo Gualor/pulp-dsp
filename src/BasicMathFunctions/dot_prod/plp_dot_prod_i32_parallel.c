@@ -50,8 +50,8 @@
   @param[in]  pSrcB      points to the second input vector
   @param[in]  blockSize  number of samples in each vector
   @param[in]  nPE        number of parallel processing units
-  @param[out] pRes     output result returned here
-  @return        none
+  @param[out] pRes       output result returned here
+  @return                none
  */
 
 void plp_dot_prod_i32_parallel(const int32_t *__restrict__ pSrcA,
@@ -65,7 +65,7 @@ void plp_dot_prod_i32_parallel(const int32_t *__restrict__ pSrcA,
         return;
     } else {
 
-        uint32_t i, tmpblkSizePE = blockSize / nPE;
+        uint32_t tmpblkSizePE = blockSize / nPE;
         int32_t resBuffer[hal_cl_nb_pe_cores()];
 
         plp_dot_prod_instance_i32 S;
@@ -80,34 +80,17 @@ void plp_dot_prod_i32_parallel(const int32_t *__restrict__ pSrcA,
         // Fork the dot product to nPE cores (i.e. processing units)
         hal_cl_team_fork(nPE, plp_dot_prod_i32p_xpulpv2, (void *)&S);
 
-        int sum = 0;
-        for (i = 0; i < nPE; i++) { // not necessary hal_cl_nb_pe_cores()
+        int i = 0;
+        int32_t sum = 0;
+        for (i = 0; i < nPE; i++) {
             sum += resBuffer[i];
         }
 
-        /* Using unroll here does not increase efficiency
-         * for small number of cores (e.g., 8 cores)
-         *
-        #if defined(PLP_MATH_LOOPUNROLL)
-
-                uint32_t remblk = (blockSize % nPE); // Block remainder
-                uint32_t remIdx = tmpblkSizePE * nPE;
-
-                for (i = remIdx; i < remIdx + ((remblk >> 1) << 1); i += 2) { // How many 2x MACs
-                    sum = __MAC(sum, pSrcA[i],   pSrcB[i]);
-                    sum = __MAC(sum, pSrcA[i+1], pSrcB[i+1]);
-                }
-                if (remblk & 1U) {
-                    sum = __MAC(sum, pSrcA[i], pSrcB[i]);
-                }
-
-        #else // PLP_MATH_LOOPUNROLL
-        */
+        // Dot product on remaining blocks, loopunroll does not increase
+        // performance here
         for (i = tmpblkSizePE * nPE; i < blockSize; i++) {
             sum = __MAC(sum, pSrcA[i], pSrcB[i]);
         }
-
-        //#endif
 
         *pRes = sum;
     }

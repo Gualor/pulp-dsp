@@ -65,7 +65,7 @@ void plp_dot_prod_i16_parallel(const int16_t *__restrict__ pSrcA,
         return;
     } else {
 
-        uint32_t i, tmpblkSizePE = blockSize / nPE;
+        uint32_t tmpblkSizePE = blockSize / nPE;
         int32_t resBuffer[hal_cl_nb_pe_cores()];
 
         plp_dot_prod_instance_i16 S;
@@ -80,7 +80,8 @@ void plp_dot_prod_i16_parallel(const int16_t *__restrict__ pSrcA,
         // Fork the dot product to nPE cores (i.e. processing units)
         hal_cl_team_fork(nPE, plp_dot_prod_i16p_xpulpv2, (void *)&S);
 
-        int sum = 0;
+        int i;
+        int32_t sum = 0;
         for (i = 0; i < nPE; i++) {
             sum += resBuffer[i];
         }

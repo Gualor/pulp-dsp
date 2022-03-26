@@ -48,39 +48,46 @@
   @brief Parallel dot product with interleaved access of 32-bit integer vectors kernel for XPULPV2
   extension.
   @param[in]  S     points to the instance structure for integer parallel dot product
-  @return        none
+  @return           none
  */
 
 void plp_dot_prod_i32p_xpulpv2(void *S) {
 
-    int32_t *pSrcA = (int32_t *)(((plp_dot_prod_instance_i32 *)S)->pSrcA);
-    int32_t *pSrcB = (int32_t *)(((plp_dot_prod_instance_i32 *)S)->pSrcB);
-    uint32_t blkSizePE = ((plp_dot_prod_instance_i32 *)S)->blkSizePE;
-    uint32_t nPE = ((plp_dot_prod_instance_i32 *)S)->nPE;
     int core_id = hal_core_id();
-    int32_t *resBufferPE = &(((plp_dot_prod_instance_i32 *)S)->resBuffer[core_id]);
+    plp_dot_prod_instance_i32 *args = (plp_dot_prod_instance_i32 *)S;
 
-    uint32_t blkCnt;    /* Loop counter, temporal BlockSize */
-    int32_t sum = 0;    /* Temporary return variable */
-    //hal_team_barrier();
+    int32_t *pSrcA = (int32_t *)(args->pSrcA);
+    int32_t *pSrcB = (int32_t *)(args->pSrcB);
+    uint32_t blkSizePE = args->blkSizePE;
+    uint32_t nPE = args->nPE;
+    int32_t *resBufferPE = &(args->resBuffer[core_id]);
+
+    uint32_t blkOffset = blkSizePE * core_id;
+    int32_t sum = 0;
 
 #if defined(PLP_MATH_LOOPUNROLL)
 
-    uint32_t loopCycles = (blkSizePE >> 1) << 1;
-    for (blkCnt = blkSizePE * core_id; blkCnt < blkSizePE * core_id + loopCycles; blkCnt += 2) {
-        sum = __MAC(sum, pSrcA[blkCnt],   pSrcB[blkCnt]);
-        sum = __MAC(sum, pSrcA[blkCnt+1], pSrcB[blkCnt+1]);
-    }
+    uint32_t blkCnt = blkSizePE >> 1;
+    int i = 0;
+    do {
+        sum = __MAC(sum, *(pSrcA + blkOffset + i * 2), *(pSrcB + blkOffset + i * 2));
+        sum = __MAC(sum, *(pSrcA + blkOffset + i * 2 + 1), *(pSrcB + blkOffset + i * 2 + 1));
+        i++;
+    } while (i < blkCnt);
+
+    blkOffset += blkCnt * 2;
     if (blkSizePE & 1U) {
-        sum = __MAC(sum, pSrcA[blkCnt], pSrcB[blkCnt]);
+        sum = __MAC(sum, *(pSrcA + blkOffset), *(pSrcB + blkOffset));
     }
 
 #else // PLP_MATH_LOOPUNROLL
 
-    for (blkCnt = blkSizePE * core_id; blkCnt < blkSizePE * core_id + blkSizePE; blkCnt++) {
-        sum = __MAC(sum, pSrcA[blkCnt], pSrcB[blkCnt]);
-    }
-    
+    int i = 0;
+    do {
+        sum = __MAC(sum, *(pSrcA + blkOffset + i), *(pSrcB + blkOffset + i));
+        i++;
+    } while (i < blkSizePE);
+
 #endif // PLP_MATH_LOOPUNROLL
 
     *resBufferPE = sum;
