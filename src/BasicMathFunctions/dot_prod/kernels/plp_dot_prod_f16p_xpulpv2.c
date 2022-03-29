@@ -64,31 +64,45 @@ void plp_dot_prod_f16p_xpulpv2(void *S) {
     uint32_t nPE = args->nPE;
     float32_t *resBufferPE = &(args->resBuffer[core_id]);
 
-    uint32_t blkOffset = blkSizePE * core_id;
+    uint32_t blkCnt, tmpBS, remBS; /* Loop counter, temporal BlockSize */
     float32_t sum = 0;
+
+    uint32_t blkSize = (blkSizePE / nPE) & 0xFFFFFFFC; // Makes it divisible by 4
+
+    // set pSrcA and pSrcB to the correct location
+    pSrcA += core_id * blkSize;
+    pSrcB += core_id * blkSize;
+
+    // set the block size for the last core
+    if (core_id == nPE - 1) {
+        blkSize = blkSizePE - (nPE - 1) * blkSize;
+    }
+
+    if (blkSize == 0) {
+        *resBufferPE = 0;
+        return;
+    }
 
 #if defined(PLP_MATH_LOOPUNROLL)
 
-    uint32_t blkCnt = blkSizePE >> 1;
-    int i = 0;
-    do {
-        sum = MAC(sum, *(pSrcA + blkOffset + i * 2), *(pSrcB + blkOffset + i * 2));
-        sum = MAC(sum, *(pSrcA + blkOffset + i * 2 + 1), *(pSrcB + blkOffset + i * 2 + 1));
-        i++;
-    } while (i < blkCnt);
+    tmpBS = (blkSize >> 1);
 
-    blkOffset += blkCnt * 2;
-    if (blkSizePE & 1U) {
-        sum = MAC(sum, *(pSrcA + blkOffset), *(pSrcB + blkOffset));
+    for (blkCnt = 0; blkCnt < tmpBS; blkCnt++) {
+        sum = MAC(sum, *(pSrcA + blkCnt * 2), *(pSrcB + blkCnt * 2));
+        sum = MAC(sum, *(pSrcA + blkCnt * 2 + 1), *(pSrcB + blkCnt * 2 + 1));
+    }
+
+    remBS = (blkSize % 4U);
+
+    if (blkSize & 1U) {
+        sum = MAC(sum, *(pSrcA + 2 * tmpBS), *(pSrcB + 2 * tmpBS));
     }
 
 #else // PLP_MATH_LOOPUNROLL
 
-    int i = 0;
-    do {
-        sum = MAC(sum, *(pSrcA + blkOffset + i), *(pSrcB + blkOffset + i));
-        i++;
-    } while (i < blkSizePE);
+    for (blkCnt = 0; blkCnt < blkSize; blkCnt++) {
+        sum = MAC(sum, (*pSrcA++), (*pSrcB++));
+    }
 
 #endif // PLP_MATH_LOOPUNROLL
 

@@ -63,39 +63,53 @@ void plp_dot_prod_q16p_xpulpv2(void *S) {
     uint32_t nPE = args->nPE;
     int32_t *resBufferPE = &(args->resBuffer[core_id]);
 
-    uint32_t blkOffset = blkSizePE * core_id;
+    uint32_t blkCnt, tmpBS, remBS; /* Loop counter, temporal BlockSize */
     int32_t sum = 0;
+
+    uint32_t blkSize = (blkSizePE / nPE) & 0xFFFFFFFC; // Makes it divisible by 4
+
+    // set pSrcA and pSrcB to the correct location
+    pSrcA += core_id * blkSize;
+    pSrcB += core_id * blkSize;
+
+    // set the block size for the last core
+    if (core_id == nPE - 1) {
+        blkSize = blkSizePE - (nPE - 1) * blkSize;
+    }
+
+    if (blkSize == 0) {
+        *resBufferPE = 0;
+        return;
+    }
 
 #if defined(PLP_MATH_LOOPUNROLL)
 
-    uint32_t blkCnt = blkSizePE >> 2;
-    int i = 0;
-    do {
-        v2s a0 = *((v2s *)((void *)(pSrcA + blkOffset + i * 4)));
-        v2s b0 = *((v2s *)((void *)(pSrcB + blkOffset + i * 4)));
-        v2s a1 = *((v2s *)((void *)(pSrcA + blkOffset + i * 4 + 2)));
-        v2s b1 = *((v2s *)((void *)(pSrcB + blkOffset + i * 4 + 2)));
-        asm volatile("" ::: "memory");
+    tmpBS = (blkSize >> 2);
+
+    for (blkCnt = 0; blkCnt < tmpBS; blkCnt++) {
+        v2s a0 = *((v2s *)((void *)(pSrcA + 4 * blkCnt)));
+        v2s b0 = *((v2s *)((void *)(pSrcB + 4 * blkCnt)));
+        v2s a1 = *((v2s *)((void *)(pSrcA + 4 * blkCnt + 2)));
+        v2s b1 = *((v2s *)((void *)(pSrcB + 4 * blkCnt + 2)));
+        asm volatile("" ::: "memory"); // Inhibits compiler reordering of memory accesses
         int32_t x0 = __DOTP2(a0, b0);
         int32_t x1 = __DOTP2(a1, b1);
         sum += __ADDROUNDNORM_REG(x0, x1, deciPoint);
-        i++;
-    } while (i < blkCnt);
+    }
 
-    uint32_t blkRem = blkSizePE % 4U;
-    blkOffset += blkCnt * 4;
-    i = 0;
-    for (i = 0; i < blkRem; i++) {
-        sum += __ROUNDNORM_REG((*(pSrcA + blkOffset + i)) * (*(pSrcB + blkOffset + i)), deciPoint);
+    remBS = (blkSize % 4U);
+
+    for (blkCnt = 0; blkCnt < remBS; blkCnt++) {
+        int16_t a = *(pSrcA + 4 * tmpBS + blkCnt);
+        int16_t b = *(pSrcB + 4 * tmpBS + blkCnt);
+        sum += __ROUNDNORM_REG(a * b, deciPoint);
     }
 
 #else // PLP_MATH_LOOPUNROLL
 
-    int i = 0;
-    do {
-        sum += __ROUNDNORM_REG((*(pSrcA + blkOffset + i)) * (*(pSrcB + blkOffset + i)), deciPoint);
-        i++;
-    } while (i < blkSizePE);
+    for (blkCnt = 0; blkCnt < blkSize; blkCnt++) {
+        sum += __ROUNDNORM_REG((*pSrcA++) * (*pSrcB++), deciPoint);
+    }
 
 #endif // PLP_MATH_LOOPUNROLL
 

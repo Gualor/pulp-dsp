@@ -65,7 +65,6 @@ void plp_dot_prod_i16_parallel(const int16_t *__restrict__ pSrcA,
         return;
     } else {
 
-        uint32_t tmpblkSizePE = blockSize / nPE;
         int32_t resBuffer[hal_cl_nb_pe_cores()];
 
         plp_dot_prod_instance_i16 S;
@@ -73,23 +72,16 @@ void plp_dot_prod_i16_parallel(const int16_t *__restrict__ pSrcA,
         // Initialize the plp_dot_prod_instance
         S.pSrcA = pSrcA;
         S.pSrcB = pSrcB;
-        S.blkSizePE = tmpblkSizePE;
+        S.blkSizePE = blockSize;
         S.nPE = nPE;
         S.resBuffer = resBuffer;
 
         // Fork the dot product to nPE cores (i.e. processing units)
         hal_cl_team_fork(nPE, plp_dot_prod_i16p_xpulpv2, (void *)&S);
 
-        int i;
-        int32_t sum = 0;
+        int i, sum = 0;
         for (i = 0; i < nPE; i++) {
             sum += resBuffer[i];
-        }
-
-        // Dot product on remaining blocks, loopunroll does not increase
-        // performance here
-        for (i = tmpblkSizePE * nPE; i < blockSize; i++) {
-            sum = __MAC(sum, pSrcA[i], pSrcB[i]);
         }
 
         *pRes = sum;
